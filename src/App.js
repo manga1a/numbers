@@ -11,7 +11,7 @@ function Number(props) {
   );
 }
 
-class ChallengeShow extends Component {
+class ChallengeSet extends Component {
   constructor(props){
     super(props);
     this.state = {idx: 0};
@@ -31,6 +31,8 @@ class ChallengeShow extends Component {
     if(newIdx < this.props.challenges.length){
       this.setState({idx: newIdx});
       setTimeout(() => this.onTrigger(), interval);
+    } else {
+      this.props.onComplete();
     }
   }
 
@@ -56,8 +58,14 @@ class ChallengeGet extends Component {
     const num = parseInt(e.target.value, 10);
     const answer = this.props.challenges[this.state.idx].n;
     const newIdx = this.state.idx + 1;
+    const count = this.props.challenges.length;
+
     if(num === answer) {
-      this.setState({idx: newIdx, value: ''});
+      if(newIdx < count) {
+        this.setState({idx: newIdx, value: ''});
+      } else {
+        this.props.onComplete();
+      }
     } else {
       this.setState({value: e.target.value});
     }
@@ -66,7 +74,7 @@ class ChallengeGet extends Component {
   render(){
     return(
       <div>
-        <h3>{this.state.idx + 1}/{this.props.challenges.length}</h3>
+        <h3>{this.state.idx}/{this.props.challenges.length}</h3>
         <input type='text' value={this.state.value} onChange={this.handleChange}/>
       </div>
     );
@@ -83,11 +91,28 @@ const numbersWithPegs = [
 
 class App extends Component {
 
+  constructor(props){
+    super(props);
+    this.state = {isShow: true};
+    this.switchMode = this.switchMode.bind(this);
+  }
+
+  switchMode(){
+    this.setState({isShow: !this.state.isShow});
+  }
+
   render(){
+    const Challenge = this.state.isShow ? (
+      <ChallengeSet challenges={numbersWithPegs}
+        interval={1500} onComplete={this.switchMode}/>
+    ) : (
+      <ChallengeGet challenges={numbersWithPegs}
+        onComplete={this.switchMode}/>
+    );
+
     return (
       <div className="App">
-        {/*<ChallengeShow challenges={numbersWithPegs} interval={1500}/>*/}
-        <ChallengeGet challenges={numbersWithPegs} />
+        {Challenge}
       </div>
     );
   }
