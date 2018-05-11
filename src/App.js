@@ -11,16 +11,15 @@ function Number(props) {
   );
 }
 
-class Challenge extends Component {
+class ChallengeShow extends Component {
   constructor(props){
     super(props);
     this.state = {idx: 0};
-    this.interval = 1500;
     this.onTrigger = this.onTrigger.bind(this);
   }
 
   componentDidMount() {
-    setTimeout(() => this.onTrigger(), this.interval);
+    setTimeout(() => this.onTrigger(), this.props.interval);
   }
 
   componentWillUnmount() {
@@ -28,9 +27,10 @@ class Challenge extends Component {
 
   onTrigger() {
     const newIdx = this.state.idx + 1;
+    const interval = this.props.interval;
     if(newIdx < this.props.challenges.length){
       this.setState({idx: newIdx});
-      setTimeout(() => this.onTrigger(), this.interval);
+      setTimeout(() => this.onTrigger(), interval);
     }
   }
 
@@ -44,6 +44,36 @@ class Challenge extends Component {
   }
 }
 
+//------------------------------------------
+class ChallengeGet extends Component {
+  constructor(props){
+    super(props);
+    this.state = {idx: 0, value: ''};
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(e){
+    const num = parseInt(e.target.value, 10);
+    const answer = this.props.challenges[this.state.idx].n;
+    const newIdx = this.state.idx + 1;
+    if(num === answer) {
+      this.setState({idx: newIdx, value: ''});
+    } else {
+      this.setState({value: e.target.value});
+    }
+  }
+
+  render(){
+    return(
+      <div>
+        <h3>{this.state.idx + 1}/{this.props.challenges.length}</h3>
+        <input type='text' value={this.state.value} onChange={this.handleChange}/>
+      </div>
+    );
+  }
+}
+//------------------------------------------
+
 const numbersWithPegs = [
       {n: 42, p: 'rain'},
       {n: 56, p: 'lego'},
@@ -52,10 +82,12 @@ const numbersWithPegs = [
       {n: 34, p: 'mare'}];
 
 class App extends Component {
+
   render(){
     return (
       <div className="App">
-        <Challenge challenges={numbersWithPegs}/>
+        {/*<ChallengeShow challenges={numbersWithPegs} interval={1500}/>*/}
+        <ChallengeGet challenges={numbersWithPegs} />
       </div>
     );
   }
