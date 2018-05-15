@@ -1,5 +1,7 @@
 Player: Vindya
 
+* Didn't get what and why of number to consonant mapping
+
 * Didn't identify why the text input has no effect in the begenning.
 ** Use button input instead of text input
 
