@@ -1,0 +1,10 @@
+Player: Vindya
+
+* Didn't identify why the text input has no effect in the begenning.
+** Use button input instead of text input
+
+* Didn't recognized the game completion
+** A better game over screen
+
+* Used a different strategy of trying multiple combination until one works
+** Use timer as a motiviation to try again?

@@ -158,7 +158,7 @@ class Level1 extends Component {
   constructor(props){
     super(props);
     this.switchMode = this.switchMode.bind(this);
-    this.state = {isChallenge: true};
+    this.state = {isChallenge: false};
   }
 
   switchMode(){
