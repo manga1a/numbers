@@ -60,7 +60,7 @@ const numberToConsonant = [
   {n: 5, c: 'l'},
   {n: 6, c: 'j, ch, sh'},
   {n: 7, c: 'k, c, g'},
-  {n: 8, c: 'f, v'},
+  {n: 8, c: 'f, v, ph'},
   {n: 9, c: 'p, b'}
 ];
 
@@ -98,7 +98,19 @@ class ChallengeConsonants extends Component {
   constructor(props){
     super(props);
     this.handleChange = this.handleChange.bind(this);
-    this.state = {idx: 0, value: ''};
+    this.state = {idx: 0, cnt: 0, value: '', sec: 0};
+  }
+
+  componentDidMount() {
+    this.timerId = setInterval(() => this.tick(), 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerId);
+  }
+
+  tick(){
+    this.setState({sec: this.state.sec + 1});
   }
 
   handleChange(e) {
@@ -106,10 +118,12 @@ class ChallengeConsonants extends Component {
     const consonants = this.props.consonants;
     if(num === consonants[this.state.idx].n) {
       const newIdx = this.state.idx + 1;
-      if(newIdx === consonants.length){
-        console.log('End of challenge');
-      }else{
-        this.setState({idx: newIdx, value: ''});
+      if(newIdx === consonants.length) {
+        //End of challenge
+        clearInterval(this.timerId);
+        this.setState({cnt: newIdx, value: ''});
+      } else {
+        this.setState({idx: newIdx, cnt: newIdx, value: ''});
       }
     } else {
         this.setState({value: e.target.value});
@@ -119,8 +133,17 @@ class ChallengeConsonants extends Component {
   render(){
     return (
       <div>
-        <h3>{this.state.idx}/{this.props.consonants.length}</h3>
-        <h2>{this.props.consonants[this.state.idx].c}</h2>
+        <table align="center">
+          <tr>
+            <td className="TextMedium">
+              {this.state.cnt}/{this.props.consonants.length} |
+            </td>
+            <td>{this.state.sec}s</td>
+          </tr>
+        </table>
+        <p className="TextLarge">
+          {this.props.consonants[this.state.idx].c}
+        </p>
         <input type='text' value={this.state.value}
           onChange={this.handleChange} />
         <br/>

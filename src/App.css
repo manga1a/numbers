@@ -18,6 +18,14 @@
   font-size: 1.5em;
 }
 
+.TextMedium {
+  font-size: 1.5em;
+}
+
+.TextLarge {
+  font-size: 2.5em;
+}
+
 .App-intro {
   font-size: large;
 }
