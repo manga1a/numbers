@@ -174,25 +174,31 @@ class ChallengeConsonants extends Component {
 }
 
 //------------------------------------------------------
+//0 = ShowConsonants
+//1 = ChallengeConsonants
 class Level1 extends Component {
   constructor(props){
     super(props);
     this.switchMode = this.switchMode.bind(this);
-    this.state = {isChallenge: true};
+    this.state = {mode: 1};
   }
 
-  switchMode(){
-    this.setState({isChallenge: !this.state.isChallenge})
+  switchMode(m){
+    this.setState({mode: m})
   }
 
   render(){
-    const mode = this.state.isChallenge ? (
-      <ChallengeConsonants consonants={shuffleArray(consonantToNumber)}
-        onBack={this.switchMode}/>
-    ) : (
-      <ShowConsonants consonants={numberToConsonant}
-        onGo={this.switchMode}/>
-    );
+    var mode;
+    if(this.state.mode === 0) {
+      mode = <ShowConsonants consonants={numberToConsonant}
+        onGo={() => {this.switchMode(1)}}/>
+    } else if(this.state.mode === 1) {
+      mode = <ChallengeConsonants consonants={shuffleArray(consonantToNumber)}
+        onBack={() => {this.switchMode(0)}}/>
+    } else if(this.state.mode === 2) {
+      //TODO: show game over
+    }
+
     return(
       <div className="App">
         {mode}
