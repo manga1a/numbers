@@ -74,15 +74,19 @@ class ShowConsonants extends Component {
     const rows = this.props.consonants.map((entry) =>
       <tr>
         <td>{entry.n}</td>
+        <td>&lt;=&gt;</td>
         <td>{entry.c}</td>
       </tr>
     );
 
     return(
       <div>
+        <p>Words are easily memorized than numbers.<br/>
+        Construct words from consonants which map to a specific number.</p>
         <table align="center">
           <tr>
             <th>Number</th>
+            <th>&lt;=&gt;</th>
             <th>Consonants</th>
           </tr>
           {rows}
@@ -97,8 +101,8 @@ class ShowConsonants extends Component {
 class ChallengeConsonants extends Component {
   constructor(props){
     super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.state = {idx: 0, cnt: 0, value: '', sec: 0};
+    this.onBtnClick = this.onBtnClick.bind(this);
+    this.state = {idx: 0, cnt: 0, sec: 0};
   }
 
   componentDidMount() {
@@ -113,20 +117,18 @@ class ChallengeConsonants extends Component {
     this.setState({sec: this.state.sec + 1});
   }
 
-  handleChange(e) {
-    const num = parseInt(e.target.value, 10);
+  onBtnClick(e){
+    const num = parseInt(e.target.id, 10);
     const consonants = this.props.consonants;
     if(num === consonants[this.state.idx].n) {
       const newIdx = this.state.idx + 1;
       if(newIdx === consonants.length) {
         //End of challenge
         clearInterval(this.timerId);
-        this.setState({cnt: newIdx, value: ''});
+        this.setState({cnt: newIdx});
       } else {
-        this.setState({idx: newIdx, cnt: newIdx, value: ''});
+        this.setState({idx: newIdx, cnt: newIdx});
       }
-    } else {
-        this.setState({value: e.target.value});
     }
   }
 
@@ -144,10 +146,28 @@ class ChallengeConsonants extends Component {
         <p className="TextLarge">
           {this.props.consonants[this.state.idx].c}
         </p>
-        <input type='text' value={this.state.value}
-          onChange={this.handleChange} />
-        <br/>
-        <button onClick={this.props.onBack}>Back</button>
+        <table align="center">
+          <tr>
+            <td><button onClick={this.onBtnClick} id={7}>7</button></td>
+            <td><button onClick={this.onBtnClick} id={8}>8</button></td>
+            <td><button onClick={this.onBtnClick} id={9}>9</button></td>
+          </tr>
+          <tr>
+            <td><button onClick={this.onBtnClick} id={4}>4</button></td>
+            <td><button onClick={this.onBtnClick} id={5}>5</button></td>
+            <td><button onClick={this.onBtnClick} id={6}>6</button></td>
+          </tr>
+          <tr>
+            <td><button onClick={this.onBtnClick} id={1}>1</button></td>
+            <td><button onClick={this.onBtnClick} id={2}>2</button></td>
+            <td><button onClick={this.onBtnClick} id={3}>3</button></td>
+          </tr>
+          <tr>
+            <td colspan='2'><button onClick={this.props.onBack}>
+              Back</button></td>
+            <td><button onClick={this.onBtnClick} id={0}>0</button></td>
+          </tr>
+        </table>
       </div>
     );
   }
@@ -158,7 +178,7 @@ class Level1 extends Component {
   constructor(props){
     super(props);
     this.switchMode = this.switchMode.bind(this);
-    this.state = {isChallenge: false};
+    this.state = {isChallenge: true};
   }
 
   switchMode(){
