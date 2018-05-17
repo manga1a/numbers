@@ -88,7 +88,9 @@ class Begin extends Component {
           </tr>
           {rows}
         </table>
-        <button onClick={this.props.onGo}>Got it!</button>
+        <button onClick={this.props.onGo} className="App-button">
+          Got It!
+        </button>
       </div>
     );
   }
@@ -146,24 +148,37 @@ class Play extends Component {
         </p>
         <table align="center">
           <tr>
-            <td><button onClick={this.onBtnClick} id={7}>7</button></td>
-            <td><button onClick={this.onBtnClick} id={8}>8</button></td>
-            <td><button onClick={this.onBtnClick} id={9}>9</button></td>
+            <td><button className="App-button" onClick={this.onBtnClick}
+              id={7}>7</button></td>
+            <td><button className="App-button" onClick={this.onBtnClick}
+              id={8}>8</button></td>
+            <td><button className="App-button" onClick={this.onBtnClick}
+              id={9}>9</button></td>
           </tr>
           <tr>
-            <td><button onClick={this.onBtnClick} id={4}>4</button></td>
-            <td><button onClick={this.onBtnClick} id={5}>5</button></td>
-            <td><button onClick={this.onBtnClick} id={6}>6</button></td>
+            <td><button className="App-button" onClick={this.onBtnClick}
+              id={4}>4</button></td>
+            <td><button className="App-button" onClick={this.onBtnClick}
+              id={5}>5</button></td>
+            <td><button className="App-button" onClick={this.onBtnClick}
+              id={6}>6</button></td>
           </tr>
           <tr>
-            <td><button onClick={this.onBtnClick} id={1}>1</button></td>
-            <td><button onClick={this.onBtnClick} id={2}>2</button></td>
-            <td><button onClick={this.onBtnClick} id={3}>3</button></td>
+            <td><button className="App-button" onClick={this.onBtnClick}
+              id={1}>1</button></td>
+            <td><button className="App-button" onClick={this.onBtnClick}
+              id={2}>2</button></td>
+            <td><button className="App-button" onClick={this.onBtnClick}
+              id={3}>3</button></td>
           </tr>
           <tr>
-            <td colspan='2'><button onClick={this.props.onBack}>
-              Back</button></td>
-            <td><button onClick={this.onBtnClick} id={0}>0</button></td>
+            <td colspan='2'>
+              <button className="App-button" onClick={this.props.onBack}>
+                Back
+              </button>
+            </td>
+            <td><button className="App-button" onClick={this.onBtnClick}
+              id={0}>0</button></td>
           </tr>
         </table>
       </div>
@@ -181,8 +196,8 @@ class Ending extends Component {
           Your best time is {this.props.time}s.<br/>
           Wanna beat it?
         </p>
-        <button onClick={this.props.onYes}>Yes</button>
-        <button onClick={this.props.onNo}>No</button>
+        <button className="App-button" onClick={this.props.onYes}>Yes</button>
+        <button className="App-button" onClick={this.props.onNo}>No</button>
       </div>
     );
   }
