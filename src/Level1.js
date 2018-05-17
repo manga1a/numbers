@@ -78,7 +78,8 @@ class Begin extends Component {
     return(
       <div>
         <p>Words are easily memorized than numbers.<br/>
-        Construct words from consonants which map to a specific number.</p>
+        Construct words from consonants,<br/>
+        which map to a specific number.</p>
         <table align="center">
           <tr>
             <th>Number</th>
@@ -87,7 +88,7 @@ class Begin extends Component {
           </tr>
           {rows}
         </table>
-        <button onClick={this.props.onGo}>Go</button>
+        <button onClick={this.props.onGo}>Got it!</button>
       </div>
     );
   }
@@ -98,7 +99,6 @@ class Play extends Component {
   constructor(props){
     super(props);
     this.onBtnClick = this.onBtnClick.bind(this);
-    //TODO: count up or down depending on input time
     this.state = {idx: 0, cnt: 0, sec: 0};
   }
 
@@ -114,15 +114,16 @@ class Play extends Component {
     this.setState({sec: this.state.sec + 1});
   }
 
-  onBtnClick(e){
+  onBtnClick(e) {
     const num = parseInt(e.target.id, 10);
     const consonants = this.props.consonants;
     if(num === consonants[this.state.idx].n) {
       const newIdx = this.state.idx + 1;
       if(newIdx === consonants.length) {
         //End of challenge
-        clearInterval(this.timerId);
-        this.setState({cnt: newIdx});
+        this.props.onComplete(this.state.sec);
+        //clearInterval(this.timerId);
+        //this.setState({cnt: newIdx});
       } else {
         this.setState({idx: newIdx, cnt: newIdx});
       }
@@ -172,63 +173,62 @@ class Play extends Component {
 
 //------------------------------------------------------
 class Ending extends Component {
-  constructor(props) {
-    super(props);
-    this.onClickYes = this.onClickYes.bind(this);
-    this.onClickNo = this.onClickNo.bind(this);
-  }
 
-  onClickYes() {
-
-  }
-
-  onClickNo() {
-    this.props.onNo();
-  }
-
-  render(){
+  render() {
     return (
       <div>
         <p className="TextMedium">
-          Beat your current best<br/> time of {this.props.time}s ?
+          Your best time is {this.props.time}s.<br/>
+          Wanna beat it?
         </p>
-        <button onClick={this.onClickYes}>Yes</button>
-        <button onClick={this.onClickNo}>No</button>
+        <button onClick={this.props.onYes}>Yes</button>
+        <button onClick={this.props.onNo}>No</button>
       </div>
     );
   }
 }
 
 //------------------------------------------------------
-//0 = Begin
-//1 = Play
-//2 = Ending
+const BEGIN = 0;
+const PLAY = 1;
+const ENDING = 2;
+
 class Level1 extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.switchMode = this.switchMode.bind(this);
     this.goToBegin = this.goToBegin.bind(this);
-    this.state = {mode: 2, time: 0};
+    this.goToPlay = this.goToPlay.bind(this);
+    this.goToEnding = this.goToEnding.bind(this);
+    this.state = {mode: BEGIN, bestTime: 0};
   }
 
-  switchMode(m){
-    this.setState({mode: m})
+  goToBegin() {
+    this.setState({mode: BEGIN, bestTime: 0});
   }
 
-  goToBegin(t = 0) {
-    this.setState({mode: 0, time: t});
+  goToPlay() {
+    this.setState({mode: PLAY});
   }
 
-  render(){
+  goToEnding(t) {
+    let newBestTime = t;
+    if(0 < this.state.bestTime && this.state.bestTime < t) {
+        newBestTime = this.state.bestTime;
+    }
+    this.setState({mode: ENDING, bestTime: newBestTime});
+  }
+
+  render() {
     var mode;
-    if(this.state.mode === 0) {
+    if(this.state.mode === BEGIN) {
       mode = <Begin consonants={numberToConsonant}
-        onGo={() => {this.switchMode(1)}}/>
-    } else if(this.state.mode === 1) {
+        onGo={this.goToPlay}/>
+    } else if(this.state.mode === PLAY) {
       mode = <Play consonants={shuffleArray(consonantToNumber)}
-        onBack={this.goToBegin}/>
-    } else if(this.state.mode === 2) {
-      mode = <Ending time={34} onNo={this.goToBegin}/>
+        onBack={this.goToBegin} onComplete={this.goToEnding} />
+    } else if(this.state.mode === ENDING) {
+      mode = <Ending time={this.state.bestTime}
+        onYes={this.goToPlay} onNo={this.goToBegin}/>
     }
 
     return(
