@@ -65,11 +65,7 @@ const numberToConsonant = [
 ];
 
 //------------------------------------------------------
-class ShowConsonants extends Component {
-  constructor(props){
-    super(props);
-  }
-
+class Begin extends Component {
   render(){
     const rows = this.props.consonants.map((entry) =>
       <tr>
@@ -98,10 +94,11 @@ class ShowConsonants extends Component {
 }
 
 //------------------------------------------------------
-class ChallengeConsonants extends Component {
+class Play extends Component {
   constructor(props){
     super(props);
     this.onBtnClick = this.onBtnClick.bind(this);
+    //TODO: count up or down depending on input time
     this.state = {idx: 0, cnt: 0, sec: 0};
   }
 
@@ -144,7 +141,7 @@ class ChallengeConsonants extends Component {
           </tr>
         </table>
         <p className="TextLarge">
-          {this.props.consonants[this.state.idx].c}
+          {this.props.consonants[this.state.idx].c} =&gt; ?
         </p>
         <table align="center">
           <tr>
@@ -174,29 +171,64 @@ class ChallengeConsonants extends Component {
 }
 
 //------------------------------------------------------
-//0 = ShowConsonants
-//1 = ChallengeConsonants
+class Ending extends Component {
+  constructor(props) {
+    super(props);
+    this.onClickYes = this.onClickYes.bind(this);
+    this.onClickNo = this.onClickNo.bind(this);
+  }
+
+  onClickYes() {
+
+  }
+
+  onClickNo() {
+    this.props.onNo();
+  }
+
+  render(){
+    return (
+      <div>
+        <p className="TextMedium">
+          Beat your current best<br/> time of {this.props.time}s ?
+        </p>
+        <button onClick={this.onClickYes}>Yes</button>
+        <button onClick={this.onClickNo}>No</button>
+      </div>
+    );
+  }
+}
+
+//------------------------------------------------------
+//0 = Begin
+//1 = Play
+//2 = Ending
 class Level1 extends Component {
   constructor(props){
     super(props);
     this.switchMode = this.switchMode.bind(this);
-    this.state = {mode: 1};
+    this.goToBegin = this.goToBegin.bind(this);
+    this.state = {mode: 2, time: 0};
   }
 
   switchMode(m){
     this.setState({mode: m})
   }
 
+  goToBegin(t = 0) {
+    this.setState({mode: 0, time: t});
+  }
+
   render(){
     var mode;
     if(this.state.mode === 0) {
-      mode = <ShowConsonants consonants={numberToConsonant}
+      mode = <Begin consonants={numberToConsonant}
         onGo={() => {this.switchMode(1)}}/>
     } else if(this.state.mode === 1) {
-      mode = <ChallengeConsonants consonants={shuffleArray(consonantToNumber)}
-        onBack={() => {this.switchMode(0)}}/>
+      mode = <Play consonants={shuffleArray(consonantToNumber)}
+        onBack={this.goToBegin}/>
     } else if(this.state.mode === 2) {
-      //TODO: show game over
+      mode = <Ending time={34} onNo={this.goToBegin}/>
     }
 
     return(
