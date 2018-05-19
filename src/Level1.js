@@ -39,10 +39,10 @@ const consonantToNumber = [
 
 const numberToConsonant = [
   {n: 1, c: 't, d, th',
-    h: 'Both \'T\' and \'D\' have 1 vertical stroke.'},
-  {n: 2, c: 'n', h: '\'N\' has 2 vertical strokes.'},
+    h: 'Both \'t\' and \'d\' have 1 vertical stroke.'},
+  {n: 2, c: 'n', h: 'Simple \'n\' has 2 vertical strokes.'},
   {n: 3, c: 'm', h: 'Simple \'m\' has 3 vertical strokes.'},
-  {n: 4, c: 'r', h: 'Four ends with \'R\'.'},
+  {n: 4, c: 'r', h: 'Four ends with \'r\'.'},
   {n: 5, c: 'l', h: '\'L\' is the roman numeral for 50.'},
   {n: 6, c: 'j, ch, sh',
     h: 'Script \'j\' tend to have a lower loop, like the numeral 6.'},
@@ -53,7 +53,7 @@ const numberToConsonant = [
   {n: 9, c: 'p, b',
     h: '\'P\' and simple \'b\' looks like the numeral 9 transformed.'},
   {n: 0, c: 's, z',
-    h: 'Zero begins with \'Z\'. Both \'S\' and \'Z\' has 0 vertical strokes.'}
+    h: 'Zero begins with \'z\'. Both \'s\' and \'z\' has 0 vertical strokes.'}
 ];
 
 //------------------------------------------------------
@@ -292,6 +292,7 @@ class Level1 extends Component {
 
   goToEnding(t) {
     let newBestTime = t;
+    // keep previous time if new is worst
     if(0 < this.state.bestTime && this.state.bestTime < t) {
         newBestTime = this.state.bestTime;
     }
