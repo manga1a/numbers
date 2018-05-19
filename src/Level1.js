@@ -15,20 +15,6 @@ function shuffleArray(arr) {
   return arr;
 }
 
-//Number with consonants
-/*
-0: s, z
-1: t, d, th
-2: n
-3: m
-4: r
-5: l
-6: j, ch, sh
-7: k, c, g, q, ck
-8: f, v, ph
-9: p, b
-*/
-
 const consonantToNumber = [
   {c: 's', n: 0},
   {c: 'z', n: 0},
@@ -43,8 +29,8 @@ const consonantToNumber = [
   {c: 'ch', n: 6},
   {c: 'sh', n: 6},
   {c: 'k', n: 7},
-  {c: 'c', n: 7},
-  {c: 'g', n: 7},
+  {c: (<div><i>hard</i> c</div>), n: 7},
+  {c: (<div><i>hard</i> g</div>), n: 7},
   {c: 'f', n: 8},
   {c: 'v', n: 8},
   {c: 'ph', n: 8},
@@ -52,56 +38,23 @@ const consonantToNumber = [
   {c: 'b', n: 9}];
 
 const numberToConsonant = [
-  {n: 0, c: 's, z',
-    h: 'Zero begins with Z. Both S and Z has 0 vertical strokes.'},
   {n: 1, c: 't, d, th',
-    h: 'Both T and D has 1 vertical stroke.'},
-  {n: 2, c: 'n', h: 'N has 2 vertical strokes.'},
-  {n: 3, c: 'm', h: 'M has 3 vertical strokes.'},
-  {n: 4, c: 'r', h: 'Four ends with R.'},
-  {n: 5, c: 'l', h: 'L is the roman numeral for 50.'},
+    h: 'Both \'T\' and \'D\' have 1 vertical stroke.'},
+  {n: 2, c: 'n', h: '\'N\' has 2 vertical strokes.'},
+  {n: 3, c: 'm', h: 'Simple \'m\' has 3 vertical strokes.'},
+  {n: 4, c: 'r', h: 'Four ends with \'R\'.'},
+  {n: 5, c: 'l', h: '\'L\' is the roman numeral for 50.'},
   {n: 6, c: 'j, ch, sh',
-    h: 'Script j tend to have a lower loop, like the numeral 6.'},
-  {n: 7, c: 'k, (hard) c, (hard) g',
-    h: 'K looks like two small 7s on their sides.'},
-  {n: 8, c: 'f, v, ph (in phone)',
-    h: 'Script f tend to have an upper and lower loop, like a figure 8.'},
+    h: 'Script \'j\' tend to have a lower loop, like the numeral 6.'},
+  {n: 7, c: (<div>k, <i>hard</i> c, <i>hard</i> g</div>),
+    h: '\'K\' looks like two small 7s on their sides.'},
+  {n: 8, c: 'f, v, ph',
+    h: 'Script \'f\' tend to have an upper and lower loop, like a figure 8.'},
   {n: 9, c: 'p, b',
-    h: 'P and b looks like the numeral 9 transformed.'}
+    h: '\'P\' and simple \'b\' looks like the numeral 9 transformed.'},
+  {n: 0, c: 's, z',
+    h: 'Zero begins with \'Z\'. Both \'S\' and \'Z\' has 0 vertical strokes.'}
 ];
-
-//------------------------------------------------------
-/*
-class Begin01 extends Component {
-  render(){
-    const rows = this.props.consonants.map((entry) =>
-      <tr>
-        <td>{entry.n}</td>
-        <td>&lt;=&gt;</td>
-        <td>{entry.c}</td>
-      </tr>
-    );
-
-    return(
-      <div>
-        <p>Each number maps to one or more consonant.<br/>
-        A consonant maps to one unique number</p>
-        <table align="center">
-          <tr>
-            <th>Number</th>
-            <th>&lt;=&gt;</th>
-            <th>Consonants</th>
-          </tr>
-          {rows}
-        </table>
-        <button onClick={this.props.onGo} className="App-button">
-          Got It!
-        </button>
-      </div>
-    );
-  }
-}
-*/
 
 //------------------------------------------------------
 class Intro extends Component {
@@ -119,7 +72,7 @@ class Intro extends Component {
 
   onNext() {
     const newIdx = this.state.idx + 1;
-    const newCount = (this.state.count < this.length) ?
+    const newCount = (this.state.count <= newIdx) ?
       (this.state.count + 1) : this.state.count;
     this.setState({idx: newIdx, count: newCount});
   }
@@ -127,14 +80,20 @@ class Intro extends Component {
   render() {
     const consonant = this.props.consonants[this.state.idx];
     const goBtn = (this.state.count === this.length) ? (
-      <button className="App-button">Got it!</button>
-    ) : '';
+      <button className="App-button" onClick={this.props.onGo}>
+        Got it!
+      </button>) : '';
 
     return(
       <div>
-        <p><i>A number maps to one or more consonant</i></p>
-        <h2>{consonant.n} =&gt; {consonant.c}</h2>
-        <p>{consonant.h}</p>
+        <p><i>A number maps to one or more consonant.</i></p>
+        <table align="center">
+          <tr>
+            <td><h2>{consonant.n}&nbsp;=&gt;&nbsp;</h2></td>
+            <td><h2>{consonant.c}</h2></td>
+          </tr>
+        </table>
+        <p>Hint: {consonant.h}</p>
         <table align="center" cellpadding="5">
           <tr>
             <td>
@@ -155,6 +114,35 @@ class Intro extends Component {
           </tr>
         </table>
         {goBtn}
+      </div>
+    );
+  }
+}
+
+//------------------------------------------------------
+class Help extends Component {
+  render() {
+    const rows = this.props.consonants.map((entry) =>
+      <tr>
+        <td>{entry.n}</td>
+        <td>=&gt;</td>
+        <td>{entry.c}</td>
+      </tr>
+    );
+
+    return(
+      <div>
+        <table align="center" cellpadding="5">
+          <tr>
+            <th>Number</th>
+            <th>=&gt;</th>
+            <th>Consonants</th>
+          </tr>
+          {rows}
+        </table>
+        <button onClick={this.props.onGo} className="App-button">
+          Got It!
+        </button>
       </div>
     );
   }
@@ -188,8 +176,6 @@ class Play extends Component {
       if(newIdx === consonants.length) {
         //End of challenge
         this.props.onComplete(this.state.sec);
-        //clearInterval(this.timerId);
-        //this.setState({cnt: newIdx});
       } else {
         this.setState({idx: newIdx, cnt: newIdx});
       }
@@ -204,12 +190,21 @@ class Play extends Component {
             <td className="TextMedium">
               {this.state.cnt}/{this.props.consonants.length} |
             </td>
-            <td>{this.state.sec}s</td>
+            <td className="TextMedium">{this.state.sec}s</td>
           </tr>
         </table>
-        <p className="TextLarge">
-          {this.props.consonants[this.state.idx].c} =&gt; ?
-        </p>
+        <table align="center">
+          <tr>
+            <td>
+              <p className="TextLarge">
+                {this.props.consonants[this.state.idx].c}
+              </p>
+            </td>
+            <td>
+              <p className="TextLarge">&nbsp;=&gt; ?</p>
+            </td>
+          </tr>
+        </table>
         <table align="center">
           <tr>
             <td><button className="App-button" onClick={this.onBtnClick}
@@ -238,7 +233,7 @@ class Play extends Component {
           <tr>
             <td colspan='2'>
               <button className="App-button" onClick={this.props.onBack}>
-                Back
+                Help
               </button>
             </td>
             <td><button className="App-button" onClick={this.onBtnClick}
@@ -257,7 +252,7 @@ class Ending extends Component {
     return (
       <div>
         <p className="TextMedium">
-          Your best time is {this.props.time}s.<br/>
+          Your best time is {this.props.time} seconds.<br/>
           Wanna beat it?
         </p>
         <button className="App-button" onClick={this.props.onYes}>Yes</button>
@@ -268,21 +263,27 @@ class Ending extends Component {
 }
 
 //------------------------------------------------------
-const BEGIN = 0;
-const PLAY = 1;
-const ENDING = 2;
+const INTRO = 0;
+const HELP = 1;
+const PLAY = 2;
+const ENDING = 3;
 
 class Level1 extends Component {
   constructor(props) {
     super(props);
-    this.goToBegin = this.goToBegin.bind(this);
+    this.goToIntro = this.goToIntro.bind(this);
+    this.goToHelp = this.goToHelp.bind(this);
     this.goToPlay = this.goToPlay.bind(this);
     this.goToEnding = this.goToEnding.bind(this);
-    this.state = {mode: BEGIN, bestTime: 0};
+    this.state = {mode: INTRO, bestTime: 0};
   }
 
-  goToBegin() {
-    this.setState({mode: BEGIN, bestTime: 0});
+  goToIntro() {
+    this.setState({mode: INTRO});
+  }
+
+  goToHelp() {
+    this.setState({mode: HELP});
   }
 
   goToPlay() {
@@ -299,15 +300,18 @@ class Level1 extends Component {
 
   render() {
     var mode;
-    if(this.state.mode === BEGIN) {
+    if(this.state.mode === INTRO) {
       mode = <Intro consonants={numberToConsonant}
+        onGo={this.goToPlay}/>
+    } else if(this.state.mode === HELP) {
+      mode = <Help consonants={numberToConsonant}
         onGo={this.goToPlay}/>
     } else if(this.state.mode === PLAY) {
       mode = <Play consonants={shuffleArray(consonantToNumber)}
-        onBack={this.goToBegin} onComplete={this.goToEnding} />
+        onBack={this.goToHelp} onComplete={this.goToEnding} />
     } else if(this.state.mode === ENDING) {
       mode = <Ending time={this.state.bestTime}
-        onYes={this.goToPlay} onNo={this.goToBegin}/>
+        onYes={this.goToPlay} onNo={this.goToHelp}/>
     }
 
     return(
