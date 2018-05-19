@@ -104,12 +104,12 @@ class Begin01 extends Component {
 */
 
 //------------------------------------------------------
-class Begin extends Component {
+class Intro extends Component {
   constructor(props) {
     super(props);
     this.onPrevious = this.onPrevious.bind(this);
     this.onNext = this.onNext.bind(this);
-    this.state = {idx: 0, count: 1, complete: false};
+    this.state = {idx: 0, count: 1};
     this.length = this.props.consonants.length;
   }
 
@@ -132,7 +132,7 @@ class Begin extends Component {
 
     return(
       <div>
-        <p>A number maps to one or more consonant</p>
+        <p><i>A number maps to one or more consonant</i></p>
         <h2>{consonant.n} =&gt; {consonant.c}</h2>
         <p>{consonant.h}</p>
         <table align="center" cellpadding="5">
@@ -300,7 +300,7 @@ class Level1 extends Component {
   render() {
     var mode;
     if(this.state.mode === BEGIN) {
-      mode = <Begin consonants={numberToConsonant}
+      mode = <Intro consonants={numberToConsonant}
         onGo={this.goToPlay}/>
     } else if(this.state.mode === PLAY) {
       mode = <Play consonants={shuffleArray(consonantToNumber)}
