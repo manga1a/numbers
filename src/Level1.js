@@ -52,20 +52,27 @@ const consonantToNumber = [
   {c: 'b', n: 9}];
 
 const numberToConsonant = [
-  {n: 0, c: 's, z'},
-  {n: 1, c: 't, d, th'},
-  {n: 2, c: 'n'},
-  {n: 3, c: 'm'},
-  {n: 4, c: 'r'},
-  {n: 5, c: 'l'},
-  {n: 6, c: 'j, ch, sh'},
-  {n: 7, c: 'k, c, g'},
-  {n: 8, c: 'f, v, ph'},
-  {n: 9, c: 'p, b'}
+  {n: 0, c: 's, z',
+    h: 'Zero begins with Z. Both S and Z has 0 vertical strokes.'},
+  {n: 1, c: 't, d, th',
+    h: 'Both T and D has 1 vertical stroke.'},
+  {n: 2, c: 'n', h: 'N has 2 vertical strokes.'},
+  {n: 3, c: 'm', h: 'M has 3 vertical strokes.'},
+  {n: 4, c: 'r', h: 'Four ends with R.'},
+  {n: 5, c: 'l', h: 'L is the roman numeral for 50.'},
+  {n: 6, c: 'j, ch, sh',
+    h: 'Script j tend to have a lower loop, like the numeral 6.'},
+  {n: 7, c: 'k, (hard) c, (hard) g',
+    h: 'K looks like two small 7s on their sides.'},
+  {n: 8, c: 'f, v, ph (in phone)',
+    h: 'Script f tend to have an upper and lower loop, like a figure 8.'},
+  {n: 9, c: 'p, b',
+    h: 'P and b looks like the numeral 9 transformed.'}
 ];
 
 //------------------------------------------------------
-class Begin extends Component {
+/*
+class Begin01 extends Component {
   render(){
     const rows = this.props.consonants.map((entry) =>
       <tr>
@@ -77,9 +84,8 @@ class Begin extends Component {
 
     return(
       <div>
-        <p>Words are easily memorized than numbers.<br/>
-        Construct words from consonants,<br/>
-        which map to a specific number.</p>
+        <p>Each number maps to one or more consonant.<br/>
+        A consonant maps to one unique number</p>
         <table align="center">
           <tr>
             <th>Number</th>
@@ -95,10 +101,68 @@ class Begin extends Component {
     );
   }
 }
+*/
+
+//------------------------------------------------------
+class Begin extends Component {
+  constructor(props) {
+    super(props);
+    this.onPrevious = this.onPrevious.bind(this);
+    this.onNext = this.onNext.bind(this);
+    this.state = {idx: 0, count: 1, complete: false};
+    this.length = this.props.consonants.length;
+  }
+
+  onPrevious() {
+    this.setState({idx: this.state.idx - 1});
+  }
+
+  onNext() {
+    const newIdx = this.state.idx + 1;
+    const newCount = (this.state.count < this.length) ?
+      (this.state.count + 1) : this.state.count;
+    this.setState({idx: newIdx, count: newCount});
+  }
+
+  render() {
+    const consonant = this.props.consonants[this.state.idx];
+    const goBtn = (this.state.count === this.length) ? (
+      <button className="App-button">Got it!</button>
+    ) : '';
+
+    return(
+      <div>
+        <p>A number maps to one or more consonant</p>
+        <h2>{consonant.n} =&gt; {consonant.c}</h2>
+        <p>{consonant.h}</p>
+        <table align="center" cellpadding="5">
+          <tr>
+            <td>
+              <button disabled={0 === this.state.idx}
+                  onClick={this.onPrevious}>
+                previous
+              </button>
+            </td>
+            <td>
+              <p>{this.state.count}/{this.length}</p>
+            </td>
+            <td>
+              <button disabled={(this.length - 1) === this.state.idx}
+                  onClick={this.onNext}>
+                next
+              </button>
+            </td>
+          </tr>
+        </table>
+        {goBtn}
+      </div>
+    );
+  }
+}
 
 //------------------------------------------------------
 class Play extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.onBtnClick = this.onBtnClick.bind(this);
     this.state = {idx: 0, cnt: 0, sec: 0};
