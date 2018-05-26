@@ -102,9 +102,9 @@ class Intro extends Component {
         {/*number to consonant mapping*/}
         <div className="one column centered row">
           <div className="column">
-            <h3 className="ui center aligned header">
+            <h1 className="ui center aligned header">
               {consonant.n}&nbsp;=&gt;&nbsp;{consonant.c}
-            </h3>
+            </h1>
           </div>
         </div>
         {/*navigation buttons*/}
@@ -136,45 +136,6 @@ class Intro extends Component {
         </div>
     </div>
     );
-      /*
-      const goBtn = (this.state.count === this.length) ? (
-        <button className="App-button" onClick={this.props.onGo}>
-          Got it!
-        </button>) : '';
-
-    return(
-      <div>
-        <p><i>A number maps to one or more consonant.</i></p>
-        <table align="center">
-          <tr>
-            <td><h2>{consonant.n}&nbsp;=&gt;&nbsp;</h2></td>
-            <td><h2>{consonant.c}</h2></td>
-          </tr>
-        </table>
-        <p>Hint: {consonant.h}</p>
-        <table align="center" cellpadding="5">
-          <tr>
-            <td>
-              <button disabled={0 === this.state.idx}
-                  onClick={this.onPrevious}>
-                previous
-              </button>
-            </td>
-            <td>
-              <p>{this.state.count}/{this.length}</p>
-            </td>
-            <td>
-              <button disabled={(this.length - 1) === this.state.idx}
-                  onClick={this.onNext}>
-                next
-              </button>
-            </td>
-          </tr>
-        </table>
-        {goBtn}
-      </div>
-    );
-    */
   }
 }
 
