@@ -43,22 +43,23 @@ const consonantToNumber = [
 
 const numberToConsonant = [
   {n: 1, c: 't, d, th',
-    h: 'Both \'t\' and \'d\' have 1 vertical stroke.'},
-  {n: 2, c: 'n', h: 'Simple \'n\' has 2 vertical strokes.'},
-  {n: 3, c: 'm', h: 'Simple \'m\' has 3 vertical strokes.'},
-  {n: 4, c: 'r', h: 'Four ends with \'r\'.'},
-  {n: 5, c: 'l', h: '\'L\' is the roman numeral for 50.'},
+    h: 'Both \'t\' and \'d\' have 1 vertical stroke.', id: 0},
+  {n: 2, c: 'n', h: 'Simple \'n\' has 2 vertical strokes.', id: 1},
+  {n: 3, c: 'm', h: 'Simple \'m\' has 3 vertical strokes.', id: 2},
+  {n: 4, c: 'r', h: 'Four ends with \'r\'.', id: 3},
+  {n: 5, c: 'l', h: '\'L\' is the roman numeral for 50.', id: 4},
   {n: 6, c: 'j, ch, sh',
-    h: 'Script \'j\' tend to have a lower loop, like the numeral 6.'},
-  //{n: 7, c: (<div>k, <i>hard</i> c, <i>hard</i> g</div>),
+    h: 'Script \'j\' tend to have a lower loop, like the numeral 6.', id: 5},
   {n: 7, c: 'k, (hard) c, (hard) g',
-    h: '\'K\' looks like two small 7s on their sides.'},
+    h: '\'K\' looks like two small 7s on their sides.', id: 6},
   {n: 8, c: 'f, v, ph',
-    h: 'Script \'f\' tend to have an upper and lower loop, like a figure 8.'},
+    h: 'Script \'f\' tend to have an upper and lower loop, like a figure 8.',
+    id: 7},
   {n: 9, c: 'p, b',
-    h: '\'P\' and simple \'b\' looks like the numeral 9 transformed.'},
+    h: '\'P\' and simple \'b\' looks like the numeral 9 transformed.', id: 8},
   {n: 0, c: 's, z',
-    h: 'Zero begins with \'z\'. Both \'s\' and \'z\' has 0 vertical strokes.'}
+    h: 'Zero begins with \'z\'. Both \'s\' and \'z\' has 0 vertical strokes.',
+    id: 9}
 ];
 
 //------------------------------------------------------
@@ -134,7 +135,7 @@ class Intro extends Component {
             </div>
           </div>
         </div>
-    </div>
+      </div>
     );
   }
 }
@@ -142,6 +143,48 @@ class Intro extends Component {
 //------------------------------------------------------
 class Help extends Component {
   render() {
+    const rows = this.props.consonants.map((entry) => (
+      <tr key={entry.id}>
+        <td />
+        <td className="right aligned">
+          <h3 className="ui header">{entry.n}&nbsp;=&gt;</h3>
+        </td>
+        <td>
+          <h3 className="ui header">{entry.c}</h3>
+        </td>
+        <td />
+      </tr>
+    ));
+
+    return (
+      <div className="ui container">
+        <table className="ui basic compact table">
+          <thead>
+            <tr>
+              <th className="four wide"></th>
+              <th className="four wide right aligned">Number</th>
+              <th className="four Wide">Consonant(s)</th>
+              <th className="four wide"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows}
+          </tbody>
+        </table>
+        <div className="ui grid">
+          <div className="column seven wide" />
+          <div className="column two wide">
+            <button className="ui positive button"
+              onClick={this.props.onGo}>
+              Go
+            </button>
+          </div>
+          <div className="column seven wide" />
+        </div>
+      </div>
+    );
+
+    /*
     const rows = this.props.consonants.map((entry) =>
       <tr>
         <td>{entry.n}</td>
@@ -165,6 +208,7 @@ class Help extends Component {
         </button>
       </div>
     );
+    */
   }
 }
 
@@ -295,7 +339,7 @@ class Level1 extends Component {
     this.goToHelp = this.goToHelp.bind(this);
     this.goToPlay = this.goToPlay.bind(this);
     this.goToEnding = this.goToEnding.bind(this);
-    this.state = {mode: INTRO, bestTime: 0};
+    this.state = {mode: HELP, bestTime: 0};
   }
 
   goToIntro() {
