@@ -6,5 +6,5 @@ import Level1 from './Level1';
 import registerServiceWorker from './registerServiceWorker';
 
 //ReactDOM.render(<App />, document.getElementById('root'));
-ReactDOM.render(<Level1 />, document.getElementById('root'));
+ReactDOM.render(<Level1 />, document.getElementById('content'));
 registerServiceWorker();

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+//import './App.css';
 
 function shuffleArray(arr) {
   var currentIdx = arr.length, tempVal, randomIdx;
@@ -29,8 +29,12 @@ const consonantToNumber = [
   {c: 'ch', n: 6},
   {c: 'sh', n: 6},
   {c: 'k', n: 7},
+  /*
   {c: (<div><i>hard</i> c</div>), n: 7},
   {c: (<div><i>hard</i> g</div>), n: 7},
+  */
+  {c: '(hard) c', n: 7},
+  {c: '(hard) g', n: 7},
   {c: 'f', n: 8},
   {c: 'v', n: 8},
   {c: 'ph', n: 8},
@@ -46,7 +50,8 @@ const numberToConsonant = [
   {n: 5, c: 'l', h: '\'L\' is the roman numeral for 50.'},
   {n: 6, c: 'j, ch, sh',
     h: 'Script \'j\' tend to have a lower loop, like the numeral 6.'},
-  {n: 7, c: (<div>k, <i>hard</i> c, <i>hard</i> g</div>),
+  //{n: 7, c: (<div>k, <i>hard</i> c, <i>hard</i> g</div>),
+  {n: 7, c: 'k, (hard) c, (hard) g',
     h: '\'K\' looks like two small 7s on their sides.'},
   {n: 8, c: 'f, v, ph',
     h: 'Script \'f\' tend to have an upper and lower loop, like a figure 8.'},
@@ -79,10 +84,63 @@ class Intro extends Component {
 
   render() {
     const consonant = this.props.consonants[this.state.idx];
-    const goBtn = (this.state.count === this.length) ? (
-      <button className="App-button" onClick={this.props.onGo}>
-        Got it!
-      </button>) : '';
+    const prevStatus = (0 === this.state.idx) ? 'disabled' : '';
+    const nextStatus = ((this.length - 1) === this.state.idx) ?
+      'disabled' : '';
+    const goStatus = (this.state.count === this.length) ? '' : 'disabled';
+
+    return (
+      <div className="ui four column grid">
+        {/*informative text*/}
+        <div className="two column centered row">
+          <div className="column">
+            <h4 className="ui center aligned header">
+              A number maps to one or more consonant.
+            </h4>
+          </div>
+        </div>
+        {/*number to consonant mapping*/}
+        <div className="one column centered row">
+          <div className="column">
+            <h3 className="ui center aligned header">
+              {consonant.n}&nbsp;=&gt;&nbsp;{consonant.c}
+            </h3>
+          </div>
+        </div>
+        {/*navigation buttons*/}
+        <div className="one column centered row">
+          <div className="ui buttons">
+            <button className={`ui labeled icon button ${prevStatus}`}
+              onClick={this.onPrevious}>
+              <i className="left chevron icon"></i>
+              Previous
+            </button>
+            <button className={`ui right labeled icon button ${nextStatus}`}
+              onClick={this.onNext}>
+              Next
+              <i className="right chevron icon"></i>
+            </button>
+          </div>
+        </div>
+        {/*Progress and go button*/}
+        <div className="one column centered row">
+          <div className="ui labeled button" tabIndex="0">
+            <div className={`ui positive button ${goStatus}`}
+              onClick={this.props.onGo}>
+              Go
+            </div>
+            <div className="ui basic left pointing label">
+              {this.state.count}/{this.length}
+            </div>
+          </div>
+        </div>
+    </div>
+    );
+      /*
+      const goBtn = (this.state.count === this.length) ? (
+        <button className="App-button" onClick={this.props.onGo}>
+          Got it!
+        </button>) : '';
 
     return(
       <div>
@@ -116,6 +174,7 @@ class Intro extends Component {
         {goBtn}
       </div>
     );
+    */
   }
 }
 
@@ -316,7 +375,7 @@ class Level1 extends Component {
     }
 
     return(
-      <div className="App">
+      <div>
         {mode}
       </div>
     );
