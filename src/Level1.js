@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-//import './App.css';
 
 function shuffleArray(arr) {
   var currentIdx = arr.length, tempVal, randomIdx;
@@ -91,24 +90,36 @@ class Intro extends Component {
     const goStatus = (this.state.count === this.length) ? '' : 'disabled';
 
     return (
-      <div className="ui four column grid">
-        {/*informative text*/}
-        <div className="two column centered row">
-          <div className="column">
-            <h4 className="ui center aligned header">
-              A number maps to one or more consonant.
-            </h4>
+      <div className="ui grid">
+        {
+          //Informative text
+        }
+        <div className="sixteen wide column">
+          <h4 className="ui center aligned header">
+            A number maps to one or more consonant.
+          </h4>
+        </div>
+        {
+          //Number to consonant mapping
+        }
+        <div className="four wide column" />
+        <div className="eight wide column">
+          <h1 className="ui center aligned header">
+            {consonant.n}&nbsp;=&gt;&nbsp;{consonant.c}
+          </h1>
+        </div>
+        <div className="four wide column" />
+        {
+          //Hint
+        }
+        <div className="sixteen wide column center aligned">
+          <div className="ui grey large basic label">
+            Hint: {consonant.h}
           </div>
         </div>
-        {/*number to consonant mapping*/}
-        <div className="one column centered row">
-          <div className="column">
-            <h1 className="ui center aligned header">
-              {consonant.n}&nbsp;=&gt;&nbsp;{consonant.c}
-            </h1>
-          </div>
-        </div>
-        {/*navigation buttons*/}
+        {
+          //Navigation buttons
+        }
         <div className="one column centered row">
           <div className="ui buttons">
             <button className={`ui labeled icon button ${prevStatus}`}
@@ -123,7 +134,9 @@ class Intro extends Component {
             </button>
           </div>
         </div>
-        {/*Progress and go button*/}
+        {
+          //Progress and go button
+        }
         <div className="one column centered row">
           <div className="ui labeled button" tabIndex="0">
             <div className={`ui positive button ${goStatus}`}
@@ -183,32 +196,6 @@ class Help extends Component {
         </div>
       </div>
     );
-
-    /*
-    const rows = this.props.consonants.map((entry) =>
-      <tr>
-        <td>{entry.n}</td>
-        <td>=&gt;</td>
-        <td>{entry.c}</td>
-      </tr>
-    );
-
-    return(
-      <div>
-        <table align="center" cellpadding="5">
-          <tr>
-            <th>Number</th>
-            <th>=&gt;</th>
-            <th>Consonants</th>
-          </tr>
-          {rows}
-        </table>
-        <button onClick={this.props.onGo} className="App-button">
-          Got It!
-        </button>
-      </div>
-    );
-    */
   }
 }
 
@@ -248,62 +235,64 @@ class Play extends Component {
 
   render(){
     return (
-      <div>
-        <table align="center">
-          <tr>
-            <td className="TextMedium">
-              {this.state.cnt}/{this.props.consonants.length} |
-            </td>
-            <td className="TextMedium">{this.state.sec}s</td>
-          </tr>
-        </table>
-        <table align="center">
-          <tr>
-            <td>
-              <p className="TextLarge">
-                {this.props.consonants[this.state.idx].c}
-              </p>
-            </td>
-            <td>
-              <p className="TextLarge">&nbsp;=&gt; ?</p>
-            </td>
-          </tr>
-        </table>
-        <table align="center">
-          <tr>
-            <td><button className="App-button" onClick={this.onBtnClick}
-              id={7}>7</button></td>
-            <td><button className="App-button" onClick={this.onBtnClick}
-              id={8}>8</button></td>
-            <td><button className="App-button" onClick={this.onBtnClick}
-              id={9}>9</button></td>
-          </tr>
-          <tr>
-            <td><button className="App-button" onClick={this.onBtnClick}
-              id={4}>4</button></td>
-            <td><button className="App-button" onClick={this.onBtnClick}
-              id={5}>5</button></td>
-            <td><button className="App-button" onClick={this.onBtnClick}
-              id={6}>6</button></td>
-          </tr>
-          <tr>
-            <td><button className="App-button" onClick={this.onBtnClick}
-              id={1}>1</button></td>
-            <td><button className="App-button" onClick={this.onBtnClick}
-              id={2}>2</button></td>
-            <td><button className="App-button" onClick={this.onBtnClick}
-              id={3}>3</button></td>
-          </tr>
-          <tr>
-            <td colspan='2'>
-              <button className="App-button" onClick={this.props.onBack}>
-                Help
-              </button>
-            </td>
-            <td><button className="App-button" onClick={this.onBtnClick}
-              id={0}>0</button></td>
-          </tr>
-        </table>
+      <div className="ui grid">
+        {/*Progress and counter*/}
+        <div className="row">
+          <div className="five wide column" />
+          <div className="six wide column">
+            <h3 className="ui header center aligned">
+              {this.state.cnt}/{this.props.consonants.length}
+              &nbsp;|&nbsp;{this.state.sec}s
+            </h3>
+          </div>
+          <div className="five wide column" />
+        </div>
+        {/*Challenge*/}
+        <div className="row">
+          <div className="sixteen wide column">
+            <h1 className="ui header center aligned">
+              {this.props.consonants[this.state.idx].c}
+              &nbsp;=&gt;&nbsp;?
+            </h1>
+          </div>
+        </div>
+        {/*Input button grid*/}
+        <div className="row">
+          <div className="six wide column"/>
+          <div className="four wide column">
+            <div className="3 fluid ui buttons">
+              <div className="ui button" onClick={this.onBtnClick}
+                id={7}>7</div>
+              <div className="ui button" onClick={this.onBtnClick}
+                id={8}>8</div>
+              <div className="ui button" onClick={this.onBtnClick}
+                id={9}>9</div>
+            </div>
+            <div className="3 fluid ui buttons">
+              <div className="ui button" onClick={this.onBtnClick}
+                id={4}>4</div>
+              <div className="ui button" onClick={this.onBtnClick}
+                id={5}>5</div>
+              <div className="ui button" onClick={this.onBtnClick}
+                id={6}>6</div>
+            </div>
+            <div className="3 fluid ui buttons">
+              <div className="ui button" onClick={this.onBtnClick}
+                id={1}>1</div>
+              <div className="ui button" onClick={this.onBtnClick}
+                id={2}>2</div>
+              <div className="ui button" onClick={this.onBtnClick}
+                id={3}>3</div>
+            </div>
+            <div className="2 fluid ui buttons">
+              <div className="ui button" onClick={this.props.onBack}>
+                Help</div>
+              <div className="ui button" onClick={this.onBtnClick}
+                id={0}>0</div>
+            </div>
+          </div>
+          <div className="six wide column"/>
+        </div>
       </div>
     );
   }
@@ -311,16 +300,27 @@ class Play extends Component {
 
 //------------------------------------------------------
 class Ending extends Component {
-
   render() {
     return (
-      <div>
-        <p className="TextMedium">
-          Your best time is {this.props.time} seconds.<br/>
-          Wanna beat it?
-        </p>
-        <button className="App-button" onClick={this.props.onYes}>Yes</button>
-        <button className="App-button" onClick={this.props.onNo}>No</button>
+      <div className="ui grid">
+        <div className="three wide column" />
+        <div className="ten wide column">
+          <h2 className="ui header center aligned">
+            Your best time is {this.props.time} seconds. Beat it?
+          </h2>
+        </div>
+        <div className="three wide column" />
+        <div className="five wide column" />
+        <div className="six wide column">
+          <div className="ui fluid buttons">
+            <div className="ui positive button"
+              onClick={this.props.onYes}>Yes</div>
+            <div className="or"></div>
+            <div className="ui button"
+              onClick={this.props.onNo}>No</div>
+          </div>
+        </div>
+        <div className="five wide column" />
       </div>
     );
   }
@@ -339,7 +339,7 @@ class Level1 extends Component {
     this.goToHelp = this.goToHelp.bind(this);
     this.goToPlay = this.goToPlay.bind(this);
     this.goToEnding = this.goToEnding.bind(this);
-    this.state = {mode: HELP, bestTime: 0};
+    this.state = {mode: INTRO, bestTime: 0};
   }
 
   goToIntro() {
