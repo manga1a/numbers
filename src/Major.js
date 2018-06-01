@@ -11,6 +11,17 @@ const Major = [
   {number: 8, peg: 'Fee'},
   {number: 9, peg: 'Bee'},
 
+  {number: '00', peg: 'ZeuS'},
+  {number: '01', peg: 'SuiT'},
+  {number: '02', peg: 'SwaN'},
+  {number: '03', peg: 'SuMo'},
+  {number: '04', peg: 'ZoRro'},
+  {number: '05', peg: 'SeaL'},
+  {number: '06', peg: 'SaSH'},
+  {number: '07', peg: 'SoCK'},
+  {number: '08', peg: 'SoFa'},
+  {number: '09', peg: 'SoaP'},
+
   {number: 10, peg: 'DiCe'},
   {number: 11, peg: 'TeD'},
   {number: 12, peg: 'TiN'},
