@@ -29,7 +29,8 @@ function Card(props) {
 
 class Level2 extends Component {
   render() {
-    const item = Major[0];
+    const idx = Math.floor(Math.random() * Major.length);
+    const item = Major[idx];
     return(
       <div className="ui container">
         <Card number={item.number} peg={item.peg} />

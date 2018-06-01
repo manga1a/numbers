@@ -21,6 +21,28 @@ const Major = [
   {number: 17, peg: 'TaCK'},
   {number: 18, peg: 'DoVe'},
   {number: 19, peg: 'TaPe'},
+
+  {number: 20, peg: 'NoSe'},
+  {number: 21, peg: 'NeT'},
+  {number: 22, peg: 'NuN'},
+  {number: 23, peg: 'NeMo'},
+  {number: 24, peg: 'NeRo'},
+  {number: 25, peg: 'NaiL'},
+  {number: 26, peg: 'NiCHe'},
+  {number: 27, peg: 'NeCK'},
+  {number: 28, peg: 'kNiFe'},
+  {number: 29, peg: 'NiB'},
+
+  {number: 30, peg: 'MouSe'},
+  {number: 31, peg: 'MaT'},
+  {number: 32, peg: 'MiNe'},
+  {number: 33, peg: 'MiMe'},
+  {number: 34, peg: 'MoweR'},
+  {number: 35, peg: 'MoLe'},
+  {number: 36, peg: 'MatCH'},
+  {number: 37, peg: 'MiC'},
+  {number: 38, peg: 'MoVie'},
+  {number: 39, peg: 'MoP'},
 ];
 
 /*
