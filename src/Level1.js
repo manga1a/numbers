@@ -1,18 +1,5 @@
 import React, { Component } from 'react';
-
-function shuffleArray(arr) {
-  var currentIdx = arr.length, tempVal, randomIdx;
-  while(0 !== currentIdx) {
-    randomIdx = Math.floor(Math.random() * currentIdx);
-    currentIdx -= 1;
-
-    tempVal = arr[currentIdx];
-    arr[currentIdx] = arr[randomIdx];
-    arr[randomIdx] = tempVal;
-  }
-
-  return arr;
-}
+import Helpers from './Helpers'
 
 const consonantToNumber = [
   {c: 's', n: 0},
@@ -372,7 +359,7 @@ class Level1 extends Component {
       mode = <Help consonants={numberToConsonant}
         onGo={this.goToPlay}/>
     } else if(this.state.mode === PLAY) {
-      mode = <Play consonants={shuffleArray(consonantToNumber)}
+      mode = <Play consonants={Helpers.shuffleArray(consonantToNumber)}
         onBack={this.goToHelp} onComplete={this.goToEnding} />
     } else if(this.state.mode === ENDING) {
       mode = <Ending time={this.state.bestTime}
