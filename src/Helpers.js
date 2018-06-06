@@ -11,7 +11,7 @@ const Helpers = (function helpers(){
       arr[currentIdx] = arr[randomIdx];
       arr[randomIdx] = tempVal;
     }
-
+    
     return arr;
   }
 

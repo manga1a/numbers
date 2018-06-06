@@ -1,5 +1,30 @@
 
 const Major = (function major(){
+  const system = {
+    '0': 'OZzy',
+    '1': 'Tea',
+    '2': 'Noah',
+    '3': 'Mo',
+    '4': 'Ray',
+    '5': 'Lee',
+    '6': 'aSH',
+    '7': 'Key',
+    '8': 'Fee',
+    '9': 'Bee',
+
+    '00': 'ZeuS',
+    '01': 'SuiT',
+    '02': 'SwaN',
+    '03': 'SuMo',
+    '04': 'ZoRro',
+    '05': 'SeaL',
+    '06': 'SaSH',
+    '07': 'SoCK',
+    '08': 'SoFa',
+    '09': 'SoaP',
+  };
+
+  /*
   const system = [
     {number: 0, peg: 'oZzy'},
     {number: 1, peg: 'Tea'},
@@ -62,10 +87,11 @@ const Major = (function major(){
 
     return numbers;
   }
+  */
 
   return {
     system: system,
-    getNumberSequence: getNumberSequence,
+    //getNumberSequence: getNumberSequence,
   };
 })();
 

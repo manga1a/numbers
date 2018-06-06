@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Major from './Major'
-//import Helpers from './Helpers'
+import Helpers from './Helpers'
 
 /*
 https://en.wikipedia.org/wiki/Leitner_system
@@ -95,8 +95,7 @@ class Recall extends Component {
   }
 
   render() {
-    const numbers = Major.getNumberSequence(this.props.flashSequence);
-    console.log(numbers);
+    console.log(this.props.numbers);
 
     return (
       <div className="ui grid">
@@ -125,7 +124,7 @@ class FlashCards extends Component {
   onTrigger() {
     const newIdx = this.state.idx + 1;
     const interval = this.props.interval;
-    if(newIdx < this.props.flashSequence.length){
+    if(newIdx < this.props.numbers.length){
       this.setState({idx: newIdx});
       setTimeout(() => this.onTrigger(), interval);
     } else {
@@ -134,10 +133,10 @@ class FlashCards extends Component {
   }
 
   render() {
-    const majorIdx = this.props.flashSequence[this.state.idx];
-    const item = Major.system[majorIdx];
+    const number = this.props.numbers[this.state.idx];
+    const peg = Major.system[number];
     return (
-      <Card number={item.number} peg={item.peg} />
+      <Card number={number} peg={peg} />
     );
   }
 }
@@ -150,11 +149,13 @@ const RECALL = 1;
 class Level2 extends Component {
   constructor(props){
     super(props);
+    const numbers = Helpers.shuffleArray(Object.keys(Major.system));
+    const setSize = 5;
     this.state = {
-      //flashSequence: [0, 1, 2, 3],
-      //flashSequence: [10, 11, 12, 13],
-      flashSequence: [22, 2, 11, 24],
-      mode: RECALL,
+      currentSet: numbers.slice(0, setSize),
+      bucket0: numbers.slice(setSize),
+      bucket1: [],
+      mode: FLASH,
     };
     this.goToRecall = this.goToRecall.bind(this);
   }
@@ -167,13 +168,13 @@ class Level2 extends Component {
     var mode;
     if(this.state.mode === FLASH) {
       mode = <FlashCards
-                flashSequence={this.state.flashSequence}
+                numbers={this.state.currentSet}
                 interval={1500}
                 onComplete={this.goToRecall}
               />
     } else {
       mode = <Recall
-                flashSequence={this.state.flashSequence}
+                numbers={this.state.currentSet}
               />
     }
 
