@@ -87,9 +87,45 @@ function Card(props) {
 }
 
 //------------------------------------------------------
+function NumberCell(focus) {
+  return (
+    <div className="ui input focus">
+      <input type="text"
+        style={{width: 40 + 'px'}}
+        placeholder='7'
+      />
+    </div>
+  );
+}
+
+class NumberInput extends Component {
+      /*<div className="ui center aligned">
+          <div className="ui input focus">
+            <input type="text"
+              style={{width: 40 + 'px'}}
+              placeholder='7'
+            />
+          <div className="ui input">
+            <input type="text"
+              style={{width: 50 + 'px'}}
+              placeholder='88'
+            />
+      </div>*/
+  render() {
+    return (
+      <div className="ui two column centered grid">
+        <div className="column center aligned">
+          <NumberCell />
+        </div>
+      </div>
+    );
+  }
+}
+
+//------------------------------------------------------
 // Recall number memory
 class Recall extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {val: ''};
   }
@@ -98,8 +134,11 @@ class Recall extends Component {
     console.log(this.props.numbers);
 
     return (
-      <div className="ui grid">
-        <ButtonGrid />
+      <div>
+        <NumberInput />
+        <div className="ui grid">
+          <ButtonGrid />
+        </div>
       </div>
     );
   }
@@ -150,12 +189,12 @@ class Level2 extends Component {
   constructor(props){
     super(props);
     const numbers = Helpers.shuffleArray(Object.keys(Major.system));
-    const setSize = 5;
+    const setSize = Math.min(5, numbers.length);
     this.state = {
       currentSet: numbers.slice(0, setSize),
       bucket0: numbers.slice(setSize),
       bucket1: [],
-      mode: FLASH,
+      mode: RECALL,
     };
     this.goToRecall = this.goToRecall.bind(this);
   }
