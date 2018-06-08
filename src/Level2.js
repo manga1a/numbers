@@ -88,6 +88,12 @@ function Card(props) {
 }
 
 //------------------------------------------------------
+const DEFAULT = 0;
+const FOCUSED = 1;
+const PASSED = 2;
+const FAILED = 3;
+
+// Single number input
 class InputCell extends Component {
   constructor(props) {
     super(props);
@@ -96,7 +102,11 @@ class InputCell extends Component {
   }
 
   render () {
-    const focus = this.props.isFocus ? 'focus' : '';
+    const focus = this.props.state === FOCUSED ? 'focus' : '';
+    const border = this.props.state === PASSED ?
+      'green' :
+      (this.props.state === FAILED ? 'red' : '');
+
     return (
       <div className={`ui large input ${focus}`}>
         <input type="text"
@@ -104,7 +114,8 @@ class InputCell extends Component {
           value={this.props.value}
           style={{
             width: this.width + 'px',
-            padding: '12px 12px'}}
+            padding: '12px 12px',
+            borderColor: border}}
         />
       </div>
     );
@@ -117,6 +128,7 @@ class Recall extends Component {
   constructor(props) {
     super(props);
     this.onSelect = this.onSelect.bind(this);
+    this.onComplete = this.onComplete.bind(this);
     this.state = {
       focus: 0,
       values: props.numbers.map(v => ''),
@@ -137,28 +149,45 @@ class Recall extends Component {
       // update text only
       this.setState({values: newValues});
     } else {
-      //validate
-      /*
-      const newPassed = this.state.passed.map( (v, i) => {
-          return (i === this.state.focus ? (actual === expected) : v);
-      });*/
-      //console.log(newPassed);
       //focus next
       const newFocus = this.state.focus + 1;
-      //TODO: check for completion
+      //change state
       this.setState({
         focus: newFocus,
         values: newValues,
       });
+
+      // check for completion
+      if(newFocus === this.props.numbers.length) {
+        // Will this execute after the previous setState???
+        setTimeout(this.onComplete, 500);
+      }
     }
-    //console.log(newVal, this.props.numbers[this.state.focus]);
+  }
+
+  onComplete() {
+    //split passes and failures
+    var passed = [], failed = [];
+    this.props.numbers.forEach( (val, idx) => {
+      if(val === this.state.values[idx]) {
+        passed.push(val);
+      } else {
+        failed.push(val);
+      }
+    });
+
+    this.props.onComplete(passed, failed);
   }
 
   render() {
     var inputCells = this.props.numbers.map( (val, idx) => {
+        const inputState = idx < this.state.focus ? (
+          val === this.state.values[idx] ? PASSED : FAILED
+        ) : (idx === this.state.focus ? FOCUSED : DEFAULT);
+
         return (<InputCell
           expected={val}
-          isFocus={idx === this.state.focus}
+          state={inputState}
           value={this.state.values[idx]}
           key={idx}/>);
     });
@@ -214,6 +243,21 @@ class FlashCards extends Component {
 }
 
 //------------------------------------------------------
+function BucketSize(props) {
+  return (
+    <div className="ui two column centered grid">
+      <div className="column center aligned">
+        <div className="ui secondary segment">
+          <p>
+            [{props.b0}] ===> [{props.b1}]
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+//------------------------------------------------------
 // Root component
 const FLASH = 0;
 const RECALL = 1;
@@ -222,18 +266,36 @@ class Level2 extends Component {
   constructor(props){
     super(props);
     const numbers = Helpers.shuffleArray(Object.keys(Major.system));
-    const setSize = Math.min(3, numbers.length);
+    this.setSize = Math.min(3, numbers.length);
     this.state = {
-      currentSet: numbers.slice(0, setSize),
-      bucket0: numbers.slice(setSize),
+      currentSet: numbers.slice(0, this.setSize),
+      bucket0: numbers.slice(this.setSize),
       bucket1: [],
-      mode: RECALL,
+      mode: FLASH,
     };
+
     this.goToRecall = this.goToRecall.bind(this);
+    this.renewSet = this.renewSet.bind(this);
   }
 
   goToRecall() {
     this.setState({mode: RECALL});
+  }
+
+  renewSet(pass, fail) {
+    console.log(`pass: ${pass}`);
+    console.log(`fail: ${fail}`);
+    // add passed to bucket 1
+    const b1 = this.state.bucket1.concat(pass);
+    // add fail back to bucket 0, and shuffle
+    const b0 = Helpers.shuffleArray(this.state.bucket0.concat(fail));
+
+    this.setState({
+      currentSet: b0.slice(0, this.setSize),
+      bucket0: b0.slice(this.setSize),
+      bucket1: b1,
+      mode: FLASH
+    });
   }
 
   render() {
@@ -247,12 +309,17 @@ class Level2 extends Component {
     } else {
       mode = <Recall
                 numbers={this.state.currentSet}
+                onComplete={this.renewSet}
               />
     }
 
     return(
       <div className="ui container">
         {mode}
+        <BucketSize
+          b0={this.state.currentSet.length + this.state.bucket0.length}
+          b1={this.state.bucket1.length}
+        />
       </div>
     );
   }

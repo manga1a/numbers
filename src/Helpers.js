@@ -1,6 +1,6 @@
 const Helpers = (function helpers(){
 
-  // shuffle a given array
+  // shuffle a given array in-place, and return the same
   function shuffleArray(arr) {
     var currentIdx = arr.length, tempVal, randomIdx;
     while(0 !== currentIdx) {
@@ -11,7 +11,7 @@ const Helpers = (function helpers(){
       arr[currentIdx] = arr[randomIdx];
       arr[randomIdx] = tempVal;
     }
-    
+
     return arr;
   }
 
