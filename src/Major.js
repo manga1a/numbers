@@ -22,76 +22,43 @@ const Major = (function major(){
     '07': 'SoCK',
     '08': 'SoFa',
     '09': 'SoaP',
+
+    '10': 'DiCe',
+    '11': 'TeD',
+    '12': 'TiN',
+    '13': 'ToMb',
+    '14': 'TyRe',
+    '15': 'DoLl',
+    '16': 'DiSH',
+    '17': 'TaCK',
+    '18': 'DoVe',
+    '19': 'TaPe',
+
+    '20': 'NoSe',
+    '21': 'NeT',
+    '22': 'NuN',
+    '23': 'NeMo',
+    '24': 'NeRo',
+    '25': 'NaiL',
+    '26': 'NiCHe',
+    '27': 'NeCK',
+    '28': 'kNiFe',
+    '29': 'NiB',
+
+    '30': 'MouSe',
+    '31': 'MaT',
+    '32': 'MiNe',
+    '33': 'MiMe',
+    '34': 'MoweR',
+    '35': 'MoLe',
+    '36': 'MatCH',
+    '37': 'MiC',
+    '38': 'MoVie',
+    '39': 'MoP',
   };
-
-  /*
-  const system = [
-    {number: 0, peg: 'oZzy'},
-    {number: 1, peg: 'Tea'},
-    {number: 2, peg: 'Noah'},
-    {number: 3, peg: 'Mo'},
-    {number: 4, peg: 'Ray'},
-    {number: 5, peg: 'Lee'},
-    {number: 6, peg: 'aSH'},
-    {number: 7, peg: 'Key'},
-    {number: 8, peg: 'Fee'},
-    {number: 9, peg: 'Bee'},
-
-    {number: '00', peg: 'ZeuS'},
-    {number: '01', peg: 'SuiT'},
-    {number: '02', peg: 'SwaN'},
-    {number: '03', peg: 'SuMo'},
-    {number: '04', peg: 'ZoRro'},
-    {number: '05', peg: 'SeaL'},
-    {number: '06', peg: 'SaSH'},
-    {number: '07', peg: 'SoCK'},
-    {number: '08', peg: 'SoFa'},
-    {number: '09', peg: 'SoaP'},
-
-    {number: 10, peg: 'DiCe'},
-    {number: 11, peg: 'TeD'},
-    {number: 12, peg: 'TiN'},
-    {number: 13, peg: 'ToMb'},
-    {number: 14, peg: 'TyRe'},
-    {number: 15, peg: 'DoLl'},
-    {number: 16, peg: 'DiSH'},
-    {number: 17, peg: 'TaCK'},
-    {number: 18, peg: 'DoVe'},
-    {number: 19, peg: 'TaPe'},
-
-    {number: 20, peg: 'NoSe'},
-    {number: 21, peg: 'NeT'},
-    {number: 22, peg: 'NuN'},
-    {number: 23, peg: 'NeMo'},
-    {number: 24, peg: 'NeRo'},
-    {number: 25, peg: 'NaiL'},
-    {number: 26, peg: 'NiCHe'},
-    {number: 27, peg: 'NeCK'},
-    {number: 28, peg: 'kNiFe'},
-    {number: 29, peg: 'NiB'},
-
-    {number: 30, peg: 'MouSe'},
-    {number: 31, peg: 'MaT'},
-    {number: 32, peg: 'MiNe'},
-    {number: 33, peg: 'MiMe'},
-    {number: 34, peg: 'MoweR'},
-    {number: 35, peg: 'MoLe'},
-    {number: 36, peg: 'MatCH'},
-    {number: 37, peg: 'MiC'},
-    {number: 38, peg: 'MoVie'},
-    {number: 39, peg: 'MoP'},
-  ];
-
-  function getNumberSequence(indices) {
-    const numbers = indices.map(idx => system[idx].number.toString());
-
-    return numbers;
-  }
-  */
 
   return {
     system: system,
-    //getNumberSequence: getNumberSequence,
   };
 })();
 

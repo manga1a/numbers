@@ -79,14 +79,6 @@ class Intro extends Component {
     return (
       <div className="ui grid">
         {
-          //Informative text
-        }
-        <div className="sixteen wide column">
-          <h4 className="ui center aligned header">
-            A number maps to one or more consonant.
-          </h4>
-        </div>
-        {
           //Number to consonant mapping
         }
         <div className="four wide column" />
@@ -96,6 +88,7 @@ class Intro extends Component {
           </h1>
         </div>
         <div className="four wide column" />
+
         {
           //Hint
         }
@@ -104,6 +97,7 @@ class Intro extends Component {
             Hint: {consonant.h}
           </div>
         </div>
+
         {
           //Navigation buttons
         }
@@ -121,6 +115,7 @@ class Intro extends Component {
             </button>
           </div>
         </div>
+
         {
           //Progress and go button
         }
@@ -135,6 +130,19 @@ class Intro extends Component {
             </div>
           </div>
         </div>
+
+        {
+          //Informative text
+        }
+        <div className="five wide column"/>
+        <div className="six wide column">
+          <div className="ui secondary segment center aligned">
+            <p>
+              A number maps to one or more consonant.
+            </p>
+          </div>
+        </div>
+        <div className="five wide column"/>
       </div>
     );
   }
@@ -152,6 +160,9 @@ class Help extends Component {
         <td>
           <h3 className="ui header">{entry.c}</h3>
         </td>
+        <td>
+          <h4 className="ui grey header">{entry.h}</h4>
+        </td>
         <td />
       </tr>
     ));
@@ -161,10 +172,10 @@ class Help extends Component {
         <table className="ui basic compact table">
           <thead>
             <tr>
-              <th className="four wide"></th>
+              <th className="two wide"></th>
               <th className="four wide right aligned">Number</th>
-              <th className="four Wide">Consonant(s)</th>
-              <th className="four wide"></th>
+              <th className="four wide">Consonant(s)</th>
+              <th className="nine wide">Hint</th>
             </tr>
           </thead>
           <tbody>

@@ -73,14 +73,14 @@ function Card(props) {
         className="ui center aligned header"
         style={{fontSize: 48 + 'px'}}
       >
-        {props.number}
+        {props.peg}
       </div>
       <div className="content">
         <div
           className="ui center aligned header"
           style={{fontSize: 32 + 'px'}}
         >
-          {props.peg}
+          {props.number}
         </div>
       </div>
     </div>

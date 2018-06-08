@@ -5,6 +5,7 @@ import './index.css';
 import App from './App';
 // eslint-disable-next-line
 import Level1 from './Level1';
+// eslint-disable-next-line
 import Level2 from './Level2';
 import registerServiceWorker from './registerServiceWorker';
 
