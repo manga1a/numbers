@@ -1,7 +1,7 @@
 
 const Major = (function major(){
   const system = {
-    '0': 'OZzy',
+    '0': 'oZzy',
     '1': 'Tea',
     '2': 'Noah',
     '3': 'Mo',
@@ -12,6 +12,7 @@ const Major = (function major(){
     '8': 'Fee',
     '9': 'Bee',
 
+    /*
     '00': 'ZeuS',
     '01': 'SuiT',
     '02': 'SwaN',
@@ -26,7 +27,7 @@ const Major = (function major(){
     '10': 'DiCe',
     '11': 'TeD',
     '12': 'TiN',
-    '13': 'ToMb',
+    '13': 'DaM',
     '14': 'TyRe',
     '15': 'DoLl',
     '16': 'DiSH',
@@ -55,6 +56,7 @@ const Major = (function major(){
     '37': 'MiC',
     '38': 'MoVie',
     '39': 'MoP',
+    */
   };
 
   return {

@@ -71,10 +71,11 @@ function Card(props) {
     <div className="ui centered card">
       <div
         className="ui center aligned header"
-        style={{fontSize: 48 + 'px'}}
+        style={{fontSize: 40 + 'px'}}
       >
-        {props.peg}
+        {props.number} | {props.peg}
       </div>
+      {/*
       <div className="content">
         <div
           className="ui center aligned header"
@@ -83,6 +84,7 @@ function Card(props) {
           {props.number}
         </div>
       </div>
+      */}
     </div>
   );
 }
@@ -134,7 +136,7 @@ class Recall extends Component {
       values: props.numbers.map(v => ''),
     };
 
-    console.log(props.numbers);
+    //console.log(props.numbers);
   }
 
   onSelect(n) {
@@ -245,7 +247,7 @@ class FlashCards extends Component {
 //------------------------------------------------------
 function BucketSize(props) {
   return (
-    <div className="ui two column centered grid">
+    <div className="ui three column centered grid">
       <div className="column center aligned">
         <div className="ui secondary segment">
           <p>
@@ -266,7 +268,7 @@ class Level2 extends Component {
   constructor(props){
     super(props);
     const numbers = Helpers.shuffleArray(Object.keys(Major.system));
-    this.setSize = Math.min(3, numbers.length);
+    this.setSize = Math.min(2, numbers.length);
     this.state = {
       currentSet: numbers.slice(0, this.setSize),
       bucket0: numbers.slice(this.setSize),
@@ -283,8 +285,8 @@ class Level2 extends Component {
   }
 
   renewSet(pass, fail) {
-    console.log(`pass: ${pass}`);
-    console.log(`fail: ${fail}`);
+    //console.log(`pass: ${pass}`);
+    //console.log(`fail: ${fail}`);
     // add passed to bucket 1
     const b1 = this.state.bucket1.concat(pass);
     // add fail back to bucket 0, and shuffle
@@ -303,7 +305,7 @@ class Level2 extends Component {
     if(this.state.mode === FLASH) {
       mode = <FlashCards
                 numbers={this.state.currentSet}
-                interval={1500}
+                interval={2000}
                 onComplete={this.goToRecall}
               />
     } else {
