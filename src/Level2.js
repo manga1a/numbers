@@ -67,13 +67,17 @@ class ButtonGrid extends Component {
 //------------------------------------------------------
 // A flash card
 function Card(props) {
+  const displayNum = props.showPeg ?
+    (props.number + ' | ' + props.peg) :
+    props.number;
+
   return (
     <div className="ui centered card">
       <div
         className="ui center aligned header"
         style={{fontSize: 40 + 'px'}}
       >
-        {props.number} | {props.peg}
+        {displayNum}
       </div>
       {/*
       <div className="content">
@@ -239,7 +243,7 @@ class FlashCards extends Component {
     const number = this.props.numbers[this.state.idx];
     const peg = Major.system[number];
     return (
-      <Card number={number} peg={peg} />
+      <Card number={number} peg={peg} showPeg={this.props.showPeg}/>
     );
   }
 }
@@ -251,12 +255,68 @@ function BucketSize(props) {
       <div className="column center aligned">
         <div className="ui secondary segment">
           <p>
-            [{props.b0}] ===> [{props.b1}]
+            [{props.b0}] ==> [{props.b1}] ==> [{props.b2}]
           </p>
         </div>
       </div>
     </div>
   );
+}
+
+//------------------------------------------------------
+// Play a Bucket
+class PlayBucket extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      picked: props.numbers.slice(0, props.setCount),
+      unpicked: props.numbers.slice(props.setCount),
+      mode: FLASH,
+    };
+
+    this.goToRecall = this.goToRecall.bind(this);
+    this.pickNewSet = this.pickNewSet.bind(this);
+  }
+
+  goToRecall() {
+    this.setState({mode: RECALL});
+  }
+
+  pickNewSet(pass, fail) {
+    // add to pass bucket
+    this.props.addToPass(pass);
+    // add to fail bucket
+    this.props.addToFail(fail);
+    // pick remaining if any
+    if(0 < this.state.unpicked.length) {
+      const setCount = Math.min(
+        this.props.setCount, this.state.unpicked.length);
+
+      this.setState({
+        picked: this.state.unpicked.slice(0, setCount),
+        unpicked: this.state.unpicked.slice(setCount),
+        mode: FLASH
+      });
+    } else {
+      this.props.onComplete();
+    }
+  }
+
+  render() {
+    if(this.state.mode === FLASH) {
+      return (<FlashCards
+                numbers={this.state.picked}
+                interval={this.props.interval}
+                onComplete={this.goToRecall}
+                showPeg={this.props.showPeg}
+              />);
+    } else {
+      return (<Recall
+                numbers={this.state.picked}
+                onComplete={this.pickNewSet}
+              />);
+    }
+  }
 }
 
 //------------------------------------------------------
@@ -267,60 +327,59 @@ const RECALL = 1;
 class Level2 extends Component {
   constructor(props){
     super(props);
-    const numbers = Helpers.shuffleArray(Object.keys(Major.system));
-    this.setSize = Math.min(2, numbers.length);
+
     this.state = {
-      currentSet: numbers.slice(0, this.setSize),
-      bucket0: numbers.slice(this.setSize),
+      bucket0: [],
       bucket1: [],
-      mode: FLASH,
+      bucket2: [],
     };
 
-    this.goToRecall = this.goToRecall.bind(this);
-    this.renewSet = this.renewSet.bind(this);
+    this.addToBucket0 = this.addToBucket0.bind(this);
+    this.addToBucket1 = this.addToBucket1.bind(this);
+    this.addToBucket2 = this.addToBucket2.bind(this);
+    this.changeBucket = this.changeBucket.bind(this);
   }
 
-  goToRecall() {
-    this.setState({mode: RECALL});
-  }
-
-  renewSet(pass, fail) {
-    //console.log(`pass: ${pass}`);
-    //console.log(`fail: ${fail}`);
-    // add passed to bucket 1
-    const b1 = this.state.bucket1.concat(pass);
-    // add fail back to bucket 0, and shuffle
-    const b0 = Helpers.shuffleArray(this.state.bucket0.concat(fail));
-
-    this.setState({
-      currentSet: b0.slice(0, this.setSize),
-      bucket0: b0.slice(this.setSize),
-      bucket1: b1,
-      mode: FLASH
+  addToBucket0(arr) {
+    this.setState((prevState) => {
+      return {bucket0: prevState.bucket0.concat(arr)};
     });
   }
 
-  render() {
-    var mode;
-    if(this.state.mode === FLASH) {
-      mode = <FlashCards
-                numbers={this.state.currentSet}
-                interval={2000}
-                onComplete={this.goToRecall}
-              />
-    } else {
-      mode = <Recall
-                numbers={this.state.currentSet}
-                onComplete={this.renewSet}
-              />
-    }
+  addToBucket1(arr) {
+    this.setState((prevState) => {
+      return {bucket1: prevState.bucket1.concat(arr)};
+    });
+  }
 
+  addToBucket2(arr) {
+    this.setState((prevState) => {
+      return {bucket2: prevState.bucket2.concat(arr)};
+    });
+  }
+
+  changeBucket() {
+    console.log('*** Change bucket ***');
+  }
+
+  render() {
     return(
       <div className="ui container">
-        {mode}
+        {/*Play bucket*/}
+        <PlayBucket
+          numbers={Helpers.shuffleArray(Object.keys(Major.system))}
+          setCount={2}
+          interval={2000}
+          showPeg={true}
+          addToPass={this.addToBucket1}
+          addToFail={this.addToBucket0}
+          onComplete={this.changeBucket}
+        />
+
         <BucketSize
-          b0={this.state.currentSet.length + this.state.bucket0.length}
+          b0={this.state.bucket0.length}
           b1={this.state.bucket1.length}
+          b2={this.state.bucket2.length}
         />
       </div>
     );
