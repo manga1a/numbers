@@ -254,8 +254,9 @@ function BucketSize(props) {
     <div className="ui three column centered grid">
       <div className="column center aligned">
         <div className="ui secondary segment">
+          <p>[[{props.picked}]]</p>
           <p>
-            [{props.b0}] ==> [{props.b1}] ==> [{props.b2}]
+            [{props.bucket0}] ==> [{props.bucket1}] ==> [{props.bucket2}]
           </p>
         </div>
       </div>
@@ -377,9 +378,10 @@ class Level2 extends Component {
         />
 
         <BucketSize
-          b0={this.state.bucket0.length}
-          b1={this.state.bucket1.length}
-          b2={this.state.bucket2.length}
+          picked={0}
+          bucket0={this.state.bucket0.length}
+          bucket1={this.state.bucket1.length}
+          bucket2={this.state.bucket2.length}
         />
       </div>
     );
