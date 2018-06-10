@@ -67,9 +67,11 @@ class ButtonGrid extends Component {
 //------------------------------------------------------
 // A flash card
 function Card(props) {
+  /*
   const displayNum = props.showPeg ?
     (props.number + ' | ' + props.peg) :
     props.number;
+  */
 
   return (
     <div className="ui centered card">
@@ -77,18 +79,16 @@ function Card(props) {
         className="ui center aligned header"
         style={{fontSize: 40 + 'px'}}
       >
-        {displayNum}
+        {props.number}
       </div>
-      {/*
       <div className="content">
         <div
           className="ui center aligned header"
           style={{fontSize: 32 + 'px'}}
         >
-          {props.number}
+          {props.peg}
         </div>
       </div>
-      */}
     </div>
   );
 }
@@ -268,6 +268,7 @@ function BucketSize(props) {
 // Root component
 const FLASH = 0;
 const RECALL = 1;
+const SET_COUNT = 4;
 
 class Level2 extends Component {
   constructor(props){
@@ -307,7 +308,7 @@ class Level2 extends Component {
     this.setState(prevState => {
       if(0 < prevState.remainder.length) {
         //TODO: make set count changeable
-        const setCount = Math.min(2, this.state.remainder.length);
+        const setCount = Math.min(SET_COUNT, this.state.remainder.length);
         //console.log('*** picking...');
         return {
             picked: prevState.remainder.slice(0, setCount),
@@ -321,13 +322,13 @@ class Level2 extends Component {
   }
 
   reloadGame(currentState) {
-    console.log('*** Reload Game...***');
+    //console.log('*** Reload Game...***');
 
     var newState = {};
     //if bucket-0 is not empty
     if(0 < currentState.bucket0.length) {
       // fill picked, remainder from bucket-0
-      const setCount = Math.min(2, currentState.bucket0.length);
+      const setCount = Math.min(SET_COUNT, currentState.bucket0.length);
       newState.remainder = Helpers.shuffleArray(
         currentState.bucket0.slice());
       newState.picked = newState.remainder.slice(0, setCount);
@@ -356,7 +357,7 @@ class Level2 extends Component {
       (
         <FlashCards
           numbers={this.state.picked}
-          interval={2000}
+          interval={1500}
           showPeg={true}
           onComplete={this.goToRecall}
         />

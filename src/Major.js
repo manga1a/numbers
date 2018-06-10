@@ -12,7 +12,6 @@ const Major = (function major(){
     '8': 'Fee',
     '9': 'Bee',
 
-    /*
     '00': 'ZeuS',
     '01': 'SuiT',
     '02': 'SwaN',
@@ -24,6 +23,7 @@ const Major = (function major(){
     '08': 'SoFa',
     '09': 'SoaP',
 
+    /*
     '10': 'DiCe',
     '11': 'TeD',
     '12': 'TiN',
