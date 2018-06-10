@@ -266,6 +266,9 @@ function BucketSize(props) {
 
 //------------------------------------------------------
 // Play a Bucket
+const FLASH = 0;
+const RECALL = 1;
+
 class PlayBucket extends Component {
   constructor(props) {
     super(props);
@@ -290,6 +293,7 @@ class PlayBucket extends Component {
     this.props.addToFail(fail);
     // pick remaining if any
     if(0 < this.state.unpicked.length) {
+      console.log(`picked from ${this.state.unpicked.length}`)
       const setCount = Math.min(
         this.props.setCount, this.state.unpicked.length);
 
@@ -298,7 +302,10 @@ class PlayBucket extends Component {
         unpicked: this.state.unpicked.slice(setCount),
         mode: FLASH
       });
+
+      this.props.onPicked(setCount);
     } else {
+      console.log('empty choices');
       this.props.onComplete();
     }
   }
@@ -322,45 +329,67 @@ class PlayBucket extends Component {
 
 //------------------------------------------------------
 // Root component
-const FLASH = 0;
-const RECALL = 1;
 
 class Level2 extends Component {
   constructor(props){
     super(props);
-
+    var arr = Object.keys(Major.system);
     this.state = {
       bucket0: [],
       bucket1: [],
       bucket2: [],
+      selected: Helpers.shuffleArray(arr),
+      remainder: arr.length,
     };
 
-    this.addToBucket0 = this.addToBucket0.bind(this);
-    this.addToBucket1 = this.addToBucket1.bind(this);
-    this.addToBucket2 = this.addToBucket2.bind(this);
+    this.addToBucket = this.addToBucket.bind(this);
     this.changeBucket = this.changeBucket.bind(this);
+    this.handlePicked = this.handlePicked.bind(this);
   }
 
-  addToBucket0(arr) {
-    this.setState((prevState) => {
-      return {bucket0: prevState.bucket0.concat(arr)};
-    });
+  /*
+  componentDidMount() {
   }
+  */
 
-  addToBucket1(arr) {
+  addToBucket(idx, arr) {
     this.setState((prevState) => {
-      return {bucket1: prevState.bucket1.concat(arr)};
-    });
-  }
-
-  addToBucket2(arr) {
-    this.setState((prevState) => {
-      return {bucket2: prevState.bucket2.concat(arr)};
+      if(idx === 0) {
+        return {bucket0: prevState.bucket0.concat(arr)};
+      } else if(idx === 1) {
+        return {bucket1: prevState.bucket1.concat(arr)};
+      } else {
+        return {bucket2: prevState.bucket2.concat(arr)};
+      }
     });
   }
 
   changeBucket() {
-    console.log('*** Change bucket ***');
+    console.log('*** change bucket ***');
+    // start from bucket 0
+    if(0 < this.state.bucket0.length) {
+      // pick from bucket 0
+      const pick = Helpers.shuffleArray(this.state.bucket0.slice());
+
+      this.setState({
+        bucket0: [],
+        selected: pick,
+        remainder: pick.length,
+      });
+    } else if(0 < this.state.bucket1.length) {
+      // pick from bucket 1
+      console.log('*** pick from bucket-1 ***');
+    } else {//bucket2 can never be empty if both of the above fails
+      // pick from bucket 2
+      console.log('*** pick from bucket-2 ***');
+    }
+  }
+
+  handlePicked(count) {
+    this.setState(prevState => {
+      return {
+        remainder: (prevState.remainder - count),
+      }});
   }
 
   render() {
@@ -368,17 +397,18 @@ class Level2 extends Component {
       <div className="ui container">
         {/*Play bucket*/}
         <PlayBucket
-          numbers={Helpers.shuffleArray(Object.keys(Major.system))}
+          numbers={this.state.selected}
           setCount={2}
           interval={2000}
           showPeg={true}
-          addToPass={this.addToBucket1}
-          addToFail={this.addToBucket0}
+          addToPass={arr => this.addToBucket(1, arr)}
+          addToFail={arr => this.addToBucket(0, arr)}
           onComplete={this.changeBucket}
+          onPicked={this.handlePicked}
         />
 
         <BucketSize
-          picked={0}
+          picked={this.state.remainder}
           bucket0={this.state.bucket0.length}
           bucket1={this.state.bucket1.length}
           bucket2={this.state.bucket2.length}
