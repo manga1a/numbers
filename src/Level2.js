@@ -282,6 +282,10 @@ class PlayBucket extends Component {
     this.pickNewSet = this.pickNewSet.bind(this);
   }
 
+  willUpdate() {
+    console.log('PlayBucket.willUpdate');
+  }
+
   goToRecall() {
     this.setState({mode: RECALL});
   }
@@ -293,7 +297,7 @@ class PlayBucket extends Component {
     this.props.addToFail(fail);
     // pick remaining if any
     if(0 < this.state.unpicked.length) {
-      console.log(`picked from ${this.state.unpicked.length}`)
+      //console.log(`picked from ${this.state.unpicked.length}`)
       const setCount = Math.min(
         this.props.setCount, this.state.unpicked.length);
 
@@ -305,7 +309,11 @@ class PlayBucket extends Component {
 
       this.props.onPicked(setCount);
     } else {
-      console.log('empty choices');
+      //console.log('empty choices');
+      this.setState({
+        mode: FLASH
+      });
+
       this.props.onComplete();
     }
   }
@@ -329,7 +337,6 @@ class PlayBucket extends Component {
 
 //------------------------------------------------------
 // Root component
-
 class Level2 extends Component {
   constructor(props){
     super(props);
@@ -365,7 +372,7 @@ class Level2 extends Component {
   }
 
   changeBucket() {
-    console.log('*** change bucket ***');
+    console.log('*** change bucket ***' + this.state.bucket0.length);
     // start from bucket 0
     if(0 < this.state.bucket0.length) {
       // pick from bucket 0
