@@ -270,6 +270,7 @@ const RECALL = 1;
 const BUCKET_CONFIG = {
   0: {showPeg: true, interval: 2000, setCount: 4},
   1: {showPeg: false, interval: 3000, setCount: 4},
+  2: {showPeg: false, interval: 2000, setCount: 4},
 };
 
 class Level2 extends Component {
@@ -336,42 +337,49 @@ class Level2 extends Component {
 
   reloadGame(currentState) {
     var newState = {};
+    var setCount;
     //if bucket-0 is not empty
     if(0 < currentState.bucket0.length) {
-      console.log('*** Load bucket-0');
       // fill picked, remainder from bucket-0
-      const setCount = Math.min(BUCKET_CONFIG[0].setCount,
+      console.log('*** Load bucket-0');
+      setCount = Math.min(BUCKET_CONFIG[0].setCount,
         currentState.bucket0.length);
 
       newState.remainder = Helpers.shuffleArray(
         currentState.bucket0.slice());
 
-      newState.picked = newState.remainder.slice(0, setCount);
-      newState.remainder = newState.remainder.slice(setCount);
       newState.bucket0 = [];
-      newState.mode = FLASH;
       newState.bucketId = 0;
     }
     //if bucket-1 is not empty
     else if(0 < currentState.bucket1.length) {
       // fill picked, remainder from bucket-1
       console.log('*** Load bucket-1');
-      const setCount = Math.min(BUCKET_CONFIG[1].setCount,
+      setCount = Math.min(BUCKET_CONFIG[1].setCount,
         currentState.bucket1.length);
 
       newState.remainder = Helpers.shuffleArray(
         currentState.bucket1.slice());
 
-      newState.picked = newState.remainder.slice(0, setCount);
-      newState.remainder = newState.remainder.slice(setCount);
       newState.bucket1 = [];
-      newState.mode = FLASH;
       newState.bucketId = 1;
     }
     else {
       // fill picked, remainder from bucket-2
       console.log('*** Load bucket-2');
+      setCount = Math.min(BUCKET_CONFIG[2].setCount,
+        currentState.bucket2.length);
+
+      newState.remainder = Helpers.shuffleArray(
+        currentState.bucket2.slice());
+
+      newState.bucket2 = [];
+      newState.bucketId = 2;
     }
+
+    newState.picked = newState.remainder.slice(0, setCount);
+    newState.remainder = newState.remainder.slice(setCount);
+    newState.mode = FLASH;
 
     return newState;
   }
