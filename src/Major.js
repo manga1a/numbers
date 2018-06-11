@@ -45,7 +45,6 @@ const Major = (function major(){
     '28': 'kNiFe',
     '29': 'NiB',
 
-    /*
     '30': 'MouSe',
     '31': 'MaT',
     '32': 'MiNe',
@@ -56,22 +55,18 @@ const Major = (function major(){
     '37': 'MiC',
     '38': 'MoVie',
     '39': 'MoP',
-    */
+
+    '40': 'RoSe',
+    '41': 'RaT',
+    '42': 'RaiN',
+    '43': 'RuM',
+    '44': 'RoweR',
+    '45': 'RaiL',
+    '46': 'RiDGe',
+    '47': 'RaKe',
+    '48': 'RooF',
+    '49': 'RoPe',
   };
-
-  const playSet = [
-    ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-    '00', '01', '02', '03', '04', '05', '06', '07', '08', '09'],
-
-    ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-    '20', '21', '22', '23', '24', '25', '26', '27', '28', '29']
-  ];
-
-  return {
-    System: system,
-    PlaySet: playSet,
-  };
-})();
 
 /*
 http://www.real-memory-improvement.com/the-major-system-peg-words.html
@@ -98,5 +93,22 @@ http://www.real-memory-improvement.com/the-major-system-peg-words.html
 21	Net	43	Ram	65	Gel	87	Fig	08	Sofa
 22	Nun	44	Rower	66	Judge	88	Fife	09	Soap
 */
+  const playSet = [
+    ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    '00', '01', '02', '03', '04', '05', '06', '07', '08', '09'],
+
+    ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+    '20', '21', '22', '23', '24', '25', '26', '27', '28', '29'],
+
+    ['30', '31', '32', '33', '34', '35', '36', '37', '38', '39',
+    '40', '41', '42', '43', '44', '45', '46', '47', '48', '49'],
+  ];
+
+  return {
+    System: system,
+    PlaySet: playSet,
+  };
+})();
+
 
 export default Major;

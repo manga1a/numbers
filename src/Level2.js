@@ -352,10 +352,12 @@ class Level2 extends Component {
   reloadGame(currentState) {
     var newState = {};
     var setCount;
+    const Min = 2;
     //if bucket-0 is not empty...
-    if(0 < currentState.bucket0.length) {
+    if(Min < currentState.bucket0.length) {
       // fill picked, remainder from bucket-0
       console.log('*** Load bucket-0');
+      debugger;
       setCount = Math.min(BUCKET_CONFIG[0].setCount,
         currentState.bucket0.length);
 
@@ -366,9 +368,10 @@ class Level2 extends Component {
       newState.bucketId = 0;
     }
     //if bucket-1 is not empty...
-    else if(0 < currentState.bucket1.length) {
+    else if(Min < currentState.bucket1.length) {
       // fill picked, remainder from bucket-1
       console.log('*** Load bucket-1');
+      debugger;
       setCount = Math.min(BUCKET_CONFIG[1].setCount,
         currentState.bucket1.length);
 
@@ -379,9 +382,10 @@ class Level2 extends Component {
       newState.bucketId = 1;
     }
     //if bucket-2 is not empty...
-    else if(0 < currentState.bucket2.length) {
+    else if(Min < currentState.bucket2.length) {
       // fill picked, remainder from bucket-2
       console.log('*** Load bucket-2');
+      debugger;
       setCount = Math.min(BUCKET_CONFIG[2].setCount,
         currentState.bucket2.length);
 
@@ -395,9 +399,12 @@ class Level2 extends Component {
     else {
       const newSetId = currentState.setId + 1;
       console.log(`*** Load new set ${newSetId}`);
+      debugger;
 
       // load new set
       var newSet = Major.PlaySet[newSetId].slice();
+      // TODO: add from bucket-0 if any
+      newSet = newSet.concat(currentState.bucket0);
       // new set starts with bucket-0
       setCount = Math.min(BUCKET_CONFIG[0].setCount, newSet.length);
 
