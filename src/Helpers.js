@@ -25,10 +25,38 @@ const Helpers = (function helpers(){
     return shuffleArray(arr);
   }
 
+  // save in localStorage
+  function saveState(key, state) {
+    try {
+      const serializedState = JSON.stringify(state);
+      localStorage.setItem(key, serializedState);
+      console.log(`saving state of ${key}`);
+    } catch(err) {
+      console.log('Failed to save state: ' + err);
+    }
+  }
+
+  // retrive local storage
+  function loadState(key) {
+    try {
+      const serializedState = localStorage.getItem(key);
+      if(serializedState === null) {
+        console.log(`loading empty state of ${key}`);
+        return undefined;
+      }
+      console.log(`loading state of ${key}`);
+      return JSON.parse(serializedState);
+    } catch(err) {
+      return undefined;
+    }
+  }
+
   // API
   return {
     shuffleArray : shuffleArray,
     createShuffledArray: createShuffledArray,
+    saveState: saveState,
+    loadState: loadState,
   };
 })();
 

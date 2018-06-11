@@ -266,16 +266,17 @@ function BucketSize(props) {
 // Root component
 const FLASH = 0;
 const RECALL = 1;
-//const SET_COUNT = 4;
 const BUCKET_CONFIG = {
   0: {showPeg: true, interval: 2000, setCount: 4},
   1: {showPeg: false, interval: 3000, setCount: 4},
   2: {showPeg: false, interval: 2000, setCount: 4},
 };
+const STORE = 'Level2';
 
 class Level2 extends Component {
   constructor(props){
     super(props);
+    //load from localStorage
     this.state = {
       bucket0: Object.keys(Major.system),
       bucket1: [],
@@ -285,6 +286,7 @@ class Level2 extends Component {
       mode: FLASH,
       bucketId: 0,
     };
+
     this.fillBuckets = this.fillBuckets.bind(this);
     this.pickNewSet = this.pickNewSet.bind(this);
     this.reloadGame = this.reloadGame.bind(this);
@@ -293,7 +295,12 @@ class Level2 extends Component {
 
   componentDidMount() {
     this.setState(prevState => {
-      return this.reloadGame(prevState);
+      const storedState = Helpers.loadState(STORE);
+      if(storedState) {
+        return storedState;
+      } else {
+        return this.reloadGame(prevState);
+      }
     });
   }
 
@@ -330,7 +337,10 @@ class Level2 extends Component {
             mode: FLASH,
         }
       } else {
-        return this.reloadGame(prevState);
+        //save to local storage
+        const newGameState = this.reloadGame(prevState);
+        Helpers.saveState(STORE, newGameState);
+        return newGameState;
       }
     });
   }
@@ -414,9 +424,9 @@ class Level2 extends Component {
             this.state.remainder.length +
             this.state.picked.length
           }
-          bucket0={this.state.bucket0.length}
-          bucket1={this.state.bucket1.length}
-          bucket2={this.state.bucket2.length}
+          bucket0={this.state.bucket0 ? this.state.bucket0.length : 0}
+          bucket1={this.state.bucket1 ? this.state.bucket1.length : 0}
+          bucket2={this.state.bucket2 ? this.state.bucket2.length : 0}
         />
       </div>
     );
