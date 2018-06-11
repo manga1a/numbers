@@ -67,11 +67,16 @@ class ButtonGrid extends Component {
 //------------------------------------------------------
 // A flash card
 function Card(props) {
-  /*
-  const displayNum = props.showPeg ?
-    (props.number + ' | ' + props.peg) :
-    props.number;
-  */
+  const peg = props.showPeg ? (
+    <div className="content">
+      <div
+        className="ui center aligned header"
+        style={{fontSize: 32 + 'px'}}
+      >
+        {props.peg}
+      </div>
+    </div>
+  ) : <span/>;
 
   return (
     <div className="ui centered card">
@@ -81,14 +86,7 @@ function Card(props) {
       >
         {props.number}
       </div>
-      <div className="content">
-        <div
-          className="ui center aligned header"
-          style={{fontSize: 32 + 'px'}}
-        >
-          {props.peg}
-        </div>
-      </div>
+      {peg}
     </div>
   );
 }
@@ -312,10 +310,8 @@ class Level2 extends Component {
   pickNewSet() {
     this.setState(prevState => {
       if(0 < prevState.remainder.length) {
-        //TODO: make set count changeable
         var setCount = BUCKET_CONFIG[prevState.bucketId].setCount;
         setCount = Math.min(setCount, prevState.remainder.length);
-        //console.log('*** picking...');
         return {
             picked: prevState.remainder.slice(0, setCount),
             remainder: prevState.remainder.slice(setCount),
@@ -328,17 +324,17 @@ class Level2 extends Component {
   }
 
   reloadGame(currentState) {
-    //console.log('*** Reload Game...***');
-
     var newState = {};
     //if bucket-0 is not empty
     if(0 < currentState.bucket0.length) {
+      console.log('*** Load bucket-0');
       // fill picked, remainder from bucket-0
-      var setCount = BUCKET_CONFIG[currentState.bucketId].setCount;
-      setCount = Math.min(setCount, currentState.bucket0.length);
+      const setCount = Math.min(BUCKET_CONFIG[0].setCount,
+        currentState.bucket0.length);
 
       newState.remainder = Helpers.shuffleArray(
         currentState.bucket0.slice());
+
       newState.picked = newState.remainder.slice(0, setCount);
       newState.remainder = newState.remainder.slice(setCount);
       newState.bucket0 = [];
@@ -349,9 +345,21 @@ class Level2 extends Component {
     else if(0 < currentState.bucket1.length) {
       // fill picked, remainder from bucket-1
       console.log('*** Load bucket-1');
+      const setCount = Math.min(BUCKET_CONFIG[1].setCount,
+        currentState.bucket1.length);
+
+      newState.remainder = Helpers.shuffleArray(
+        currentState.bucket1.slice());
+
+      newState.picked = newState.remainder.slice(0, setCount);
+      newState.remainder = newState.remainder.slice(setCount);
+      newState.bucket1 = [];
+      newState.mode = FLASH;
+      newState.bucketId = 1;
     }
     else {
       // fill picked, remainder from bucket-2
+      console.log('*** Load bucket-2');
     }
 
     return newState;
