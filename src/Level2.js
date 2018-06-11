@@ -239,7 +239,7 @@ class FlashCards extends Component {
 
   render() {
     const number = this.props.numbers[this.state.idx];
-    const peg = Major.system[number];
+    const peg = Major.System[number];
     return (
       <Card number={number} peg={peg} showPeg={this.props.showPeg}/>
     );
@@ -278,13 +278,15 @@ class Level2 extends Component {
     super(props);
     //load from localStorage
     this.state = {
-      bucket0: Object.keys(Major.system),
+      bucket0: [],
       bucket1: [],
       bucket2: [],
+      bucket3: [],
       picked: [],
       remainder: [],
       mode: FLASH,
       bucketId: 0,
+      setId: -1,
     };
 
     this.fillBuckets = this.fillBuckets.bind(this);
@@ -318,7 +320,9 @@ class Level2 extends Component {
           bucket2: prevState.bucket2.concat(pass),
         });
       } else {
-        //TODO: Add to a new bucket???
+        newState = Object.assign(failState, {
+          bucket3: prevState.bucket3.concat(pass),
+        });
       }
       return newState;
     });
@@ -348,7 +352,7 @@ class Level2 extends Component {
   reloadGame(currentState) {
     var newState = {};
     var setCount;
-    //if bucket-0 is not empty
+    //if bucket-0 is not empty...
     if(0 < currentState.bucket0.length) {
       // fill picked, remainder from bucket-0
       console.log('*** Load bucket-0');
@@ -361,7 +365,7 @@ class Level2 extends Component {
       newState.bucket0 = [];
       newState.bucketId = 0;
     }
-    //if bucket-1 is not empty
+    //if bucket-1 is not empty...
     else if(0 < currentState.bucket1.length) {
       // fill picked, remainder from bucket-1
       console.log('*** Load bucket-1');
@@ -374,7 +378,8 @@ class Level2 extends Component {
       newState.bucket1 = [];
       newState.bucketId = 1;
     }
-    else {
+    //if bucket-2 is not empty...
+    else if(0 < currentState.bucket2.length) {
       // fill picked, remainder from bucket-2
       console.log('*** Load bucket-2');
       setCount = Math.min(BUCKET_CONFIG[2].setCount,
@@ -385,6 +390,23 @@ class Level2 extends Component {
 
       newState.bucket2 = [];
       newState.bucketId = 2;
+    }
+    // all buckets are empty...
+    else {
+      const newSetId = currentState.setId + 1;
+      console.log(`*** Load new set ${newSetId}`);
+
+      // load new set
+      var newSet = Major.PlaySet[newSetId].slice();
+      // new set starts with bucket-0
+      setCount = Math.min(BUCKET_CONFIG[0].setCount, newSet.length);
+
+      newState.remainder = Helpers.shuffleArray(newSet);
+      newState.setId = newSetId;
+      newState.bucketId = 0;
+
+      // add from bucket-3 if any
+      newState.bucket2 = [].concat(currentState.bucket3);
     }
 
     newState.picked = newState.remainder.slice(0, setCount);

@@ -23,7 +23,6 @@ const Major = (function major(){
     '08': 'SoFa',
     '09': 'SoaP',
 
-    /*
     '10': 'DiCe',
     '11': 'TeD',
     '12': 'TiN',
@@ -46,6 +45,7 @@ const Major = (function major(){
     '28': 'kNiFe',
     '29': 'NiB',
 
+    /*
     '30': 'MouSe',
     '31': 'MaT',
     '32': 'MiNe',
@@ -59,8 +59,17 @@ const Major = (function major(){
     */
   };
 
+  const playSet = [
+    ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    '00', '01', '02', '03', '04', '05', '06', '07', '08', '09'],
+
+    ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+    '20', '21', '22', '23', '24', '25', '26', '27', '28', '29']
+  ];
+
   return {
-    system: system,
+    System: system,
+    PlaySet: playSet,
   };
 })();
 
