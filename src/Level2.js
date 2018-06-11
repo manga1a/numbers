@@ -297,12 +297,23 @@ class Level2 extends Component {
   }
 
   fillBuckets(pass, fail) {
-    //console.log('fillBuckets p:' + pass + ', f: '+ fail);
-    this.setState(prevState => {return {
-      bucket0: prevState.bucket0.concat(fail),
-      //TODO: change depending on current bucket
-      bucket1: prevState.bucket1.concat(pass),
-    }});
+    this.setState(prevState => {
+      // always add failed items to bucket-0 (i.e. Leitner system)
+      const failState = { bucket0: prevState.bucket0.concat(fail)};
+      var newState;
+      if(prevState.bucketId === 0) {
+        newState = Object.assign(failState, {
+          bucket1: prevState.bucket1.concat(pass),
+        });
+      } else if(prevState.bucketId === 1) {
+        newState = Object.assign(failState, {
+          bucket2: prevState.bucket2.concat(pass),
+        });
+      } else {
+        //TODO: Add to a new bucket???
+      }
+      return newState;
+    });
     // get new set from selected
     this.pickNewSet();
   }
