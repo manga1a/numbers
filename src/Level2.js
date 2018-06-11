@@ -268,7 +268,11 @@ function BucketSize(props) {
 // Root component
 const FLASH = 0;
 const RECALL = 1;
-const SET_COUNT = 4;
+//const SET_COUNT = 4;
+const BUCKET_CONFIG = {
+  0: {showPeg: true, interval: 2000, setCount: 4},
+  1: {showPeg: false, interval: 3000, setCount: 4},
+};
 
 class Level2 extends Component {
   constructor(props){
@@ -280,6 +284,7 @@ class Level2 extends Component {
       picked: [],
       remainder: [],
       mode: FLASH,
+      bucketId: 0,
     };
     this.fillBuckets = this.fillBuckets.bind(this);
     this.pickNewSet = this.pickNewSet.bind(this);
@@ -308,7 +313,8 @@ class Level2 extends Component {
     this.setState(prevState => {
       if(0 < prevState.remainder.length) {
         //TODO: make set count changeable
-        const setCount = Math.min(SET_COUNT, this.state.remainder.length);
+        var setCount = BUCKET_CONFIG[prevState.bucketId].setCount;
+        setCount = Math.min(setCount, prevState.remainder.length);
         //console.log('*** picking...');
         return {
             picked: prevState.remainder.slice(0, setCount),
@@ -328,13 +334,16 @@ class Level2 extends Component {
     //if bucket-0 is not empty
     if(0 < currentState.bucket0.length) {
       // fill picked, remainder from bucket-0
-      const setCount = Math.min(SET_COUNT, currentState.bucket0.length);
+      var setCount = BUCKET_CONFIG[currentState.bucketId].setCount;
+      setCount = Math.min(setCount, currentState.bucket0.length);
+
       newState.remainder = Helpers.shuffleArray(
         currentState.bucket0.slice());
       newState.picked = newState.remainder.slice(0, setCount);
       newState.remainder = newState.remainder.slice(setCount);
       newState.bucket0 = [];
       newState.mode = FLASH;
+      newState.bucketId = 0;
     }
     //if bucket-1 is not empty
     else if(0 < currentState.bucket1.length) {
@@ -357,8 +366,8 @@ class Level2 extends Component {
       (
         <FlashCards
           numbers={this.state.picked}
-          interval={1500}
-          showPeg={true}
+          interval={BUCKET_CONFIG[this.state.bucketId].interval}
+          showPeg={BUCKET_CONFIG[this.state.bucketId].showPeg}
           onComplete={this.goToRecall}
         />
       ) :
