@@ -267,9 +267,9 @@ function BucketSize(props) {
 const FLASH = 0;
 const RECALL = 1;
 const BUCKET_CONFIG = {
-  0: {showPeg: true, interval: 2000, setCount: 4},
-  1: {showPeg: false, interval: 3000, setCount: 4},
-  2: {showPeg: false, interval: 2000, setCount: 4},
+  0: {showPeg: true, interval: 2000, pickCount: 3},
+  1: {showPeg: false, interval: 2000, pickCount: 3},
+  2: {showPeg: false, interval: 2000, pickCount: 4},
 };
 const STORE = 'Level2';
 
@@ -333,11 +333,11 @@ class Level2 extends Component {
   pickNewSet() {
     this.setState(prevState => {
       if(0 < prevState.remainder.length) {
-        var setCount = BUCKET_CONFIG[prevState.bucketId].setCount;
-        setCount = Math.min(setCount, prevState.remainder.length);
+        var pickCount = BUCKET_CONFIG[prevState.bucketId].pickCount;
+        pickCount = Math.min(pickCount, prevState.remainder.length);
         return {
-            picked: prevState.remainder.slice(0, setCount),
-            remainder: prevState.remainder.slice(setCount),
+            picked: prevState.remainder.slice(0, pickCount),
+            remainder: prevState.remainder.slice(pickCount),
             mode: FLASH,
         }
       } else {
@@ -351,14 +351,15 @@ class Level2 extends Component {
 
   reloadGame(currentState) {
     var newState = {};
-    var setCount;
-    const Min = 2;
-    //if bucket-0 is not empty...
-    if(Min < currentState.bucket0.length) {
+    var pickCount;
+    // if bucket-0 is not too low...
+    // no value in re-playing for 2 or less items
+    if(2 < currentState.bucket0.length) {
+      //TODO: will be ignored when no more new set remains
       // fill picked, remainder from bucket-0
       console.log('*** Load bucket-0');
       debugger;
-      setCount = Math.min(BUCKET_CONFIG[0].setCount,
+      pickCount = Math.min(BUCKET_CONFIG[0].pickCount,
         currentState.bucket0.length);
 
       newState.remainder = Helpers.shuffleArray(
@@ -368,11 +369,11 @@ class Level2 extends Component {
       newState.bucketId = 0;
     }
     //if bucket-1 is not empty...
-    else if(Min < currentState.bucket1.length) {
+    else if(0 < currentState.bucket1.length) {
       // fill picked, remainder from bucket-1
       console.log('*** Load bucket-1');
       debugger;
-      setCount = Math.min(BUCKET_CONFIG[1].setCount,
+      pickCount = Math.min(BUCKET_CONFIG[1].pickCount,
         currentState.bucket1.length);
 
       newState.remainder = Helpers.shuffleArray(
@@ -382,11 +383,11 @@ class Level2 extends Component {
       newState.bucketId = 1;
     }
     //if bucket-2 is not empty...
-    else if(Min < currentState.bucket2.length) {
+    else if(0 < currentState.bucket2.length) {
       // fill picked, remainder from bucket-2
       console.log('*** Load bucket-2');
       debugger;
-      setCount = Math.min(BUCKET_CONFIG[2].setCount,
+      pickCount = Math.min(BUCKET_CONFIG[2].pickCount,
         currentState.bucket2.length);
 
       newState.remainder = Helpers.shuffleArray(
@@ -403,21 +404,23 @@ class Level2 extends Component {
 
       // load new set
       var newSet = Major.PlaySet[newSetId].slice();
-      // TODO: add from bucket-0 if any
+      // add from bucket-0 if any
       newSet = newSet.concat(currentState.bucket0);
       // new set starts with bucket-0
-      setCount = Math.min(BUCKET_CONFIG[0].setCount, newSet.length);
+      pickCount = Math.min(BUCKET_CONFIG[0].pickCount, newSet.length);
 
       newState.remainder = Helpers.shuffleArray(newSet);
       newState.setId = newSetId;
       newState.bucketId = 0;
 
       // add from bucket-3 if any
-      newState.bucket2 = [].concat(currentState.bucket3);
+      newState.bucket2 = Helpers.shuffleArray([].concat(currentState.bucket3));
+      newState.bucket0 = [];
+      newState.bucket3 = [];
     }
 
-    newState.picked = newState.remainder.slice(0, setCount);
-    newState.remainder = newState.remainder.slice(setCount);
+    newState.picked = newState.remainder.slice(0, pickCount);
+    newState.remainder = newState.remainder.slice(pickCount);
     newState.mode = FLASH;
 
     return newState;
