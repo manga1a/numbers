@@ -149,6 +149,7 @@ class Recall extends Component {
         (v, i) => i === idx ? actual : v
       );
 
+    //TODO: exception thrown: actual or expected undefined
     if(actual.length < expected.length) {
       // update text only
       this.setState({values: newValues});
