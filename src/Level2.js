@@ -356,7 +356,6 @@ class Level2 extends Component {
     // if bucket-0 is not too low...
     // no value in re-playing for 2 or less items
     if(2 < currentState.bucket0.length) {
-      //TODO: will be ignored when no more new set remains
       // fill picked, remainder from bucket-0
       console.log('*** Load bucket-0');
       debugger;
@@ -404,20 +403,24 @@ class Level2 extends Component {
       debugger;
 
       // load new set
-      var newSet = Major.PlaySet[newSetId].slice();
-      // add from bucket-0 if any
-      newSet = newSet.concat(currentState.bucket0);
-      // new set starts with bucket-0
-      pickCount = Math.min(BUCKET_CONFIG[0].pickCount, newSet.length);
+      if(newSetId < Major.PlaySet.length) {
+        var newSet = Major.PlaySet[newSetId].slice();
+        // add from bucket-0 if any
+        newSet = newSet.concat(currentState.bucket0);
+        // new set starts with bucket-0
+        pickCount = Math.min(BUCKET_CONFIG[0].pickCount, newSet.length);
 
-      newState.remainder = Helpers.shuffleArray(newSet);
-      newState.setId = newSetId;
-      newState.bucketId = 0;
+        newState.remainder = Helpers.shuffleArray(newSet);
+        newState.setId = newSetId;
+        newState.bucketId = 0;
 
-      // add from bucket-3 if any
-      newState.bucket2 = Helpers.shuffleArray([].concat(currentState.bucket3));
-      newState.bucket0 = [];
-      newState.bucket3 = [];
+        // add from bucket-3 if any
+        newState.bucket2 = Helpers.shuffleArray([].concat(currentState.bucket3));
+        newState.bucket0 = [];
+        newState.bucket3 = [];
+      } else {
+        console.log('***** END OF LEVEL-2 *****');
+      }
     }
 
     newState.picked = newState.remainder.slice(0, pickCount);

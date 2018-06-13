@@ -8,4 +8,4 @@ Level2 | Player: Mangala
 ** Have a pause between bucket changing with reward
 
 * bucket-1 and bucket-2 doesn't feel much different
-** Increase set count of bucket-2
+** Increase pick count of bucket-2
