@@ -91,7 +91,7 @@ const Major = (function major(){
 
     '70': 'CaSe',
     '71': 'CaT',
-    '72': 'CaNe',
+    '72': 'CoiN',
     '73': 'CoMb',
     '74': 'CaR',
     '75': 'CoaL',
@@ -100,7 +100,7 @@ const Major = (function major(){
     '78': 'CuFf',
     '79': 'CoP',
 
-    '80': 'FeZ',
+    '80': 'VaSe',
     '81': 'FiT',
     '82': 'FaN',
     '83': 'FoaM',

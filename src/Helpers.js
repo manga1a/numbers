@@ -30,7 +30,7 @@ const Helpers = (function helpers(){
     try {
       const serializedState = JSON.stringify(state);
       localStorage.setItem(key, serializedState);
-      console.log(`saving state of ${key}`);
+      console.log(`saving state of ${key}...`);
     } catch(err) {
       console.log('Failed to save state: ' + err);
     }
@@ -41,10 +41,10 @@ const Helpers = (function helpers(){
     try {
       const serializedState = localStorage.getItem(key);
       if(serializedState === null) {
-        console.log(`loading empty state of ${key}`);
+        console.log(`Empty state of ${key}`);
         return undefined;
       }
-      console.log(`loading state of ${key}`);
+      console.log(`loading state of ${key}...`);
       return JSON.parse(serializedState);
     } catch(err) {
       return undefined;

@@ -149,7 +149,6 @@ class Recall extends Component {
         (v, i) => i === idx ? actual : v
       );
 
-    //TODO: exception thrown: actual or expected undefined
     if(actual.length < expected.length) {
       // update text only
       this.setState({values: newValues});
@@ -334,6 +333,13 @@ class Level2 extends Component {
   pickNewSet() {
     this.setState(prevState => {
       if(0 < prevState.remainder.length) {
+        // save if in bucket-2
+        if(prevState.bucketId === 2) {
+          let savingState = Object.assign({}, prevState);
+          savingState.mode = FLASH;
+          Helpers.saveState(STORE, savingState);
+        }
+
         var pickCount = BUCKET_CONFIG[prevState.bucketId].pickCount;
         pickCount = Math.min(pickCount, prevState.remainder.length);
         return {
@@ -387,13 +393,16 @@ class Level2 extends Component {
       // fill picked, remainder from bucket-2
       console.log('*** Load bucket-2');
       debugger;
-      pickCount = Math.min(BUCKET_CONFIG[2].pickCount,
-        currentState.bucket2.length);
 
-      newState.remainder = Helpers.shuffleArray(
-        currentState.bucket2.slice());
-
+      // add from bucket-3 if any
+      let newSet = currentState.bucket2.concat(currentState.bucket3);
       newState.bucket2 = [];
+      newState.bucket3 = [];
+
+      pickCount = Math.min(BUCKET_CONFIG[2].pickCount, newSet.length);
+
+      newState.remainder = Helpers.shuffleArray(newSet);
+
       newState.bucketId = 2;
     }
     // all buckets are empty...
@@ -404,9 +413,10 @@ class Level2 extends Component {
 
       // load new set
       if(newSetId < Major.PlaySet.length) {
-        var newSet = Major.PlaySet[newSetId].slice();
+        let newSet = Major.PlaySet[newSetId].slice();
         // add from bucket-0 if any
         newSet = newSet.concat(currentState.bucket0);
+        newState.bucket0 = [];
         // new set starts with bucket-0
         pickCount = Math.min(BUCKET_CONFIG[0].pickCount, newSet.length);
 
@@ -414,10 +424,6 @@ class Level2 extends Component {
         newState.setId = newSetId;
         newState.bucketId = 0;
 
-        // add from bucket-3 if any
-        newState.bucket2 = Helpers.shuffleArray([].concat(currentState.bucket3));
-        newState.bucket0 = [];
-        newState.bucket3 = [];
       } else {
         console.log('***** END OF LEVEL-2 *****');
       }
