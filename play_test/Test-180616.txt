@@ -1,0 +1,4 @@
+Level2 | Player: Mangala
+
+* Playing all the numbers again in bucket-2 seems tedious.
+** Can we play only difficult ones?
