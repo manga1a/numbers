@@ -267,7 +267,7 @@ function BucketSize(props) {
 const FLASH = 0;
 const RECALL = 1;
 const BUCKET_CONFIG = {
-  0: {showPeg: true, interval: 2000, pickCount: 3},
+  0: {showPeg: true, interval: 2000, pickCount: 4},
   1: {showPeg: false, interval: 2000, pickCount: 3},
   2: {showPeg: false, interval: 2000, pickCount: 4},
 };
@@ -394,10 +394,14 @@ class Level2 extends Component {
       console.log('*** Load bucket-2');
       debugger;
 
-      // add from bucket-3 if any
-      let newSet = currentState.bucket2.concat(currentState.bucket3);
+      let newSet = currentState.bucket2.slice();
       newState.bucket2 = [];
-      newState.bucket3 = [];
+      // add from bucket-3 if any...
+      //... only if previous bucket is not 2
+      if(currentState.bucketId !== 2) {
+        newSet = newSet.concat(currentState.bucket3);
+        newState.bucket3 = [];
+      }
 
       pickCount = Math.min(BUCKET_CONFIG[2].pickCount, newSet.length);
 
