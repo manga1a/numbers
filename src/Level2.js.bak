@@ -268,8 +268,8 @@ const FLASH = 0;
 const RECALL = 1;
 const BUCKET_CONFIG = {
   0: {showPeg: true, interval: 2000, pickCount: 4},
-  1: {showPeg: false, interval: 2000, pickCount: 4},
-  2: {showPeg: false, interval: 1200, pickCount: 4},
+  1: {showPeg: false, interval: 2000, pickCount: 3},
+  2: {showPeg: false, interval: 2000, pickCount: 4},
 };
 const STORE = 'Level2';
 
@@ -281,13 +281,12 @@ class Level2 extends Component {
       bucket0: [],
       bucket1: [],
       bucket2: [],
-      wins: [],
-      retired: [],
+      bucket3: [],
       picked: [],
       remainder: [],
       mode: FLASH,
       bucketId: 0,
-      setId: -1, //TODO: state gets reset???
+      setId: -1,
     };
 
     this.fillBuckets = this.fillBuckets.bind(this);
@@ -322,7 +321,7 @@ class Level2 extends Component {
         });
       } else {
         newState = Object.assign(failState, {
-          wins: prevState.wins.concat(pass),
+          bucket3: prevState.bucket3.concat(pass),
         });
       }
       return newState;
@@ -334,6 +333,13 @@ class Level2 extends Component {
   pickNewSet() {
     this.setState(prevState => {
       if(0 < prevState.remainder.length) {
+        // save if in bucket-2
+        if(prevState.bucketId === 2) {
+          let savingState = Object.assign({}, prevState);
+          savingState.mode = FLASH;
+          Helpers.saveState(STORE, savingState);
+        }
+
         var pickCount = BUCKET_CONFIG[prevState.bucketId].pickCount;
         pickCount = Math.min(pickCount, prevState.remainder.length);
         return {
@@ -392,10 +398,9 @@ class Level2 extends Component {
       newState.bucket2 = [];
       // add from bucket-3 if any...
       //... only if previous bucket is not 2
-      //... and this is a replay
       if(currentState.bucketId !== 2) {
-        newSet = newSet.concat(currentState.wins);
-        newState.wins = [];
+        newSet = newSet.concat(currentState.bucket3);
+        newState.bucket3 = [];
       }
 
       pickCount = Math.min(BUCKET_CONFIG[2].pickCount, newSet.length);
@@ -418,10 +423,6 @@ class Level2 extends Component {
         newState.bucket0 = [];
         // new set starts with bucket-0
         pickCount = Math.min(BUCKET_CONFIG[0].pickCount, newSet.length);
-
-        // promote bucket-3
-        newState.retired = currentState.retired.concat(currentState.wins);
-        newState.wins = [];
 
         newState.remainder = Helpers.shuffleArray(newSet);
         newState.setId = newSetId;
