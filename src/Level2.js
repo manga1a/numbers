@@ -131,10 +131,10 @@ class InputCell extends Component {
 // Show sequence of cards with numbers [and pegs]
 class Memorize extends Component {
   static propTypes = {
-    interval: PropTypes.number,
-    numbers: PropTypes.array,
+    interval: PropTypes.number.isRequired,
+    numbers: PropTypes.array.isRequired,
     onComplete: PropTypes.func.isRequired,
-    showPeg: PropTypes.bool.isRequired,
+    showPeg: PropTypes.bool,
   };
 
   constructor(props){
@@ -174,7 +174,7 @@ class Memorize extends Component {
 // Recall number memory
 class Recall extends Component {
   static propTypes = {
-    numbers: PropTypes.array,
+    numbers: PropTypes.array.isRequired,
     onComplete: PropTypes.func.isRequired,
   };
 
@@ -263,8 +263,9 @@ const PracticeMode = { Memorize: 0, Recall: 1};
 
 class Practice extends Component {
   static propTypes = {
-    numbers: PropTypes.array,
+    numbers: PropTypes.array.isRequired,
     onComplete: PropTypes.func.isRequired,
+    showPeg: PropTypes.bool,
   }
 
   constructor(props){
@@ -283,7 +284,7 @@ class Practice extends Component {
         <Memorize
           numbers={this.props.numbers}
           interval={2000}
-          showPeg={true}
+          showPeg={this.props.showPeg}
           onComplete={this.goToRecall}
         />
       );
@@ -299,6 +300,25 @@ class Practice extends Component {
 }
 
 //------------------------------------------------------
+/*
+* Keep buckets 0 - 5, and r (i.e. retired)
+* Keep track of session number starting from 1
+* A session consists of...
+  * Pick items from bucket-0 and study (i.e. show peg)
+    * add pass to bucket-1, fail to bucket-0
+  * Pick items from bucket-1 and practice
+    * add pass to bucket-2, fail to bucket-0
+  * For each remaining buckets...
+  * If the session id is a factor of their associated prime
+    * (bucket-2: 2, bucket-3: 3, bucket-4: 5, bucket-5: 7)
+    * practice items from that bucket
+    * add pass to next bucket, fail to bucket-0
+* Save state at end of a session
+
+* Always try to keep 10 items in bucket-0
+* Maintain this at the start of a session?
+*/
+//------------------------------------------------------
 // Root component
 class Level2 extends Component {
   render() {
@@ -306,6 +326,7 @@ class Level2 extends Component {
       <div className="ui container">
         <Practice
           numbers={['00', '02', '01', '03']}
+          showPeg={false}
           onComplete={(pass, fail) => {
             console.log(pass, fail);
           }}
