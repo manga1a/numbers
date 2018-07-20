@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Major from './Major'
-import Helpers from './Helpers'
+//import Helpers from './Helpers'
 
 /*
 https://en.wikipedia.org/wiki/Leitner_system
@@ -265,7 +265,8 @@ class Practice extends Component {
   static propTypes = {
     numbers: PropTypes.array.isRequired,
     onComplete: PropTypes.func.isRequired,
-    showPeg: PropTypes.bool,
+    showPeg: PropTypes.bool.isRequired,
+    interval: PropTypes.number.isRequired
   }
 
   constructor(props){
@@ -283,7 +284,7 @@ class Practice extends Component {
       return (
         <Memorize
           numbers={this.props.numbers}
-          interval={2000}
+          interval={this.props.interval}
           showPeg={this.props.showPeg}
           onComplete={this.goToRecall}
         />
@@ -315,21 +316,68 @@ class Practice extends Component {
     * add pass to next bucket, fail to bucket-0
 * Save state at end of a session
 
-* Always try to keep 10 items in bucket-0
+* Always try to keep 5? items in bucket-0
 * Maintain this at the start of a session?
 */
 //------------------------------------------------------
+// Game component
+class Game extends Component {
+
+  static propTypes = {
+    buckets: PropTypes.array.isRequired,
+    sessionId: PropTypes.number.isRequired,
+    onBucketComplete: PropTypes.func.isRequired
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = { bucketId: 0 }
+  }
+
+  render() {
+    return (
+      <Practice
+        numbers={this.props.buckets[this.state.bucketId]}
+        showPeg={0 === this.state.bucketId}
+        interval={2000}
+        onComplete={(pass, fail) => {
+          this.props.onBucketComplete(
+            this.state.bucketId, pass, fail);
+        }}
+      />
+    );
+  }
+}
+
+//------------------------------------------------------
 // Root component
 class Level2 extends Component {
+
+  constructor(props) {
+    super(props);
+    this.onBucketComplete = this.onBucketComplete.bind(this);
+    this.state = {
+      buckets: [
+        ['04', '03', '02', '01', '00'], //0
+        [], //1
+        [], //2
+      ],
+
+      sessionId: 1
+    };
+  }
+
+  onBucketComplete(id, pass, fail) {
+    console.log('id: ', id, ", passed: ", pass, ", failed: ", fail);
+  }
+
   render() {
     return(
       <div className="ui container">
-        <Practice
-          numbers={['00', '02', '01', '03']}
-          showPeg={false}
-          onComplete={(pass, fail) => {
-            console.log(pass, fail);
-          }}
+        <Game
+          buckets={this.state.buckets}
+          sessionId={this.state.sessionId}
+          onBucketComplete={this.onBucketComplete}
         />
       </div>
     );
