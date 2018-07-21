@@ -271,20 +271,6 @@ class Practice extends Component {
     onComplete: PropTypes.func.isRequired,
   }
 
-  /*
-  constructor(props){
-    super(props);
-    //this.state = {mode: PracticeMode.Memorize}
-    //this.goToRecall = this.goToRecall.bind(this);
-  }
-  */
-
-  /*
-  goToRecall() {
-    this.setState({mode: PracticeMode.Recall});
-  }
-  */
-
   render () {
     if(this.props.mode === PracticeMode.Memorize) {
       return (
@@ -360,9 +346,8 @@ class GameSession extends Component {
       const currBucket = prevState.bucketId;
       const nextBucket = currBucket + 1;
       let nextSessionBuckets = prevState.sessionBuckets.map((numbers, idx) => {
-        // current bucket should be empty
         if(idx === currBucket) {
-          return [];
+          return []; // current bucket is emptied
         } else if(idx === nextBucket) {
           return numbers.concat(pass);
         } else {
@@ -409,7 +394,6 @@ class Level2 extends Component {
         [], //1
         [], //2
       ],
-
       sessionId: 1
     };
   }
@@ -421,6 +405,7 @@ class Level2 extends Component {
           buckets={this.state.buckets}
           sessionId={this.state.sessionId}
         />
+        <h4 className="ui center aligned header">Session # {this.state.sessionId}</h4>
       </div>
     );
   }
