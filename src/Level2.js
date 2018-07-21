@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Major from './Major'
-//import Helpers from './Helpers'
+import Helpers from './Helpers'
 
 /*
 https://en.wikipedia.org/wiki/Leitner_system
@@ -304,7 +304,7 @@ class Practice extends Component {
     * add pass to bucket-2, fail to bucket-0
   * For each remaining buckets...
   * If the session id is a factor of their associated prime
-    * (bucket-2: 2, bucket-3: 3, bucket-4: 5, bucket-5: 7)
+    * (bucket-2: 2, bucket-3: 3, bucket-4: 5[, bucket-5: 7])
     * practice items from that bucket
     * add pass to next bucket, fail to bucket-0
 * Save state at end of a session
@@ -381,7 +381,7 @@ class GameSession extends Component {
   }
 
   getNextBucketId(currentId, sessionId, bucketCount) {
-    const primes = [2, 3, 5, 7];
+    const primes = [2, 3, 5]; // Supports upto 5 buckets, except retired
     let current = currentId;
     while(current < bucketCount) {
       if(sessionId % primes[current - 2] === 0) {
@@ -409,24 +409,82 @@ class GameSession extends Component {
 
 //------------------------------------------------------
 // Root component
+const StateKey = 'Level2';
+const MinBucket0Length = 5;
+
 class Level2 extends Component {
 
   constructor(props) {
     super(props);
     this.onSessionComplete = this.onSessionComplete.bind(this);
-    this.state = {
-      buckets: [
-        ['04', '03', '02', '01', '00'], //0
-        [], //1
-        [], //2
-      ],
-      sessionId: 1
+    this.getNewSession = this.getNewSession.bind(this);
+    //load persistant state
+    let state = Helpers.loadState(StateKey);
+    if(state) {
+      this.state = state;
+    } else {
+      this.state = this.getNewSession({
+        buckets: [
+          [], //0th bucket
+          [], //1st bucket
+          [] //2nd bucket
+        ],
+        sessionId: 0, // one before very first session
+        nextSystemIdx: 0, // start major system index
+      });
+    }
+    /*
+      this.state = {
+        buckets: [
+          ["0", "1", "2", "3", "4"], //0th bucket
+          [], //1st bucket
+          [] //2nd bucket
+        ],
+        sessionId: 1, // one before very first session
+        nextSystemIdx: 0, // start major system index
+      };
+    */
+  }
+
+  getNewSession(prevState) {
+    let bucket0 = prevState.buckets[0];
+    const len = bucket0.length;
+    let idx = prevState.nextSystemIdx;
+    // make sure bucket0 has minimum length
+    if(len < MinBucket0Length) {
+      const end = idx + (MinBucket0Length - len);
+      var newNumbers = Major.Numbers.slice(idx, end);
+      bucket0 = newNumbers.concat(prevState.buckets[0]);
+      idx = end; //TODO: handle end of numbers
+    }
+    //TODO: shuffle bucket0
+    // update buckets with new bucket0
+    const newBuckets = prevState.buckets.map((bucket, i) => {
+      if(0 === i) {
+        return bucket0;
+      } else {
+        return bucket;
+      }
+    });
+
+    return {
+      buckets: newBuckets,
+      nextSystemIdx: idx,
+      sessionId: prevState.sessionId + 1,
     };
   }
 
   onSessionComplete(newBuckets) {
     console.log(`End of session ${this.state.sessionId}`);
+    //TODO: Update buckets
+    //persist state
+    //start new session?
   }
+
+  /*
+  componentDidMount() {
+  }
+  */
 
   render() {
     return(
