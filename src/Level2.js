@@ -325,18 +325,24 @@ class GameSession extends Component {
   constructor(props) {
     super(props);
     this.onBucketComplete = this.onBucketComplete.bind(this);
+    this.getInitState = this.getInitState.bind(this);
     this.setModeRecall = this.setModeRecall.bind(this);
     this.getNextBucketId = this.getNextBucketId.bind(this);
+
+    this.state = this.getInitState(props.buckets);
+  }
+
+  getInitState(buckets) {
     // deep copy buckets
-    const clonedBuckets = props.buckets.map(bucket => {
+    const clonedBuckets = buckets.map(bucket => {
       return [].concat(bucket);
     });
-    // set initial state
-    this.state = {
+
+    return {
       bucketId: 0,
       sessionBuckets: clonedBuckets,
-      practiceMode: PracticeMode.Memorize
-    }
+      practiceMode: PracticeMode.Memorize,
+    };
   }
 
   setModeRecall() {
@@ -351,7 +357,7 @@ class GameSession extends Component {
         if(idx === currBucket) {
           return []; // current bucket is emptied
         } else if(idx === nextBucket) {
-          return numbers.concat(pass);
+          return Helpers.shuffleArray(numbers.concat(pass));
         } else {
           return numbers;
         }
@@ -391,6 +397,13 @@ class GameSession extends Component {
     }
 
     return -1;
+  }
+
+  componentDidUpdate(prevProps) {
+    //console.log(`prev session: ${prevProps.sessionId}, new session: ${this.props.sessionId}`);
+    if(prevProps.sessionId < this.props.sessionId) {
+      this.setState(this.getInitState(this.props.buckets));
+    }
   }
 
   render() {
@@ -433,17 +446,6 @@ class Level2 extends Component {
         nextSystemIdx: 0, // start major system index
       });
     }
-    /*
-      this.state = {
-        buckets: [
-          ["0", "1", "2", "3", "4"], //0th bucket
-          [], //1st bucket
-          [] //2nd bucket
-        ],
-        sessionId: 1, // one before very first session
-        nextSystemIdx: 0, // start major system index
-      };
-    */
   }
 
   getNewSession(prevState) {
@@ -457,7 +459,7 @@ class Level2 extends Component {
       bucket0 = newNumbers.concat(prevState.buckets[0]);
       idx = end; //TODO: handle end of numbers
     }
-    //TODO: shuffle bucket0
+    Helpers.shuffleArray(bucket0);
     // update buckets with new bucket0
     const newBuckets = prevState.buckets.map((bucket, i) => {
       if(0 === i) {
@@ -476,15 +478,16 @@ class Level2 extends Component {
 
   onSessionComplete(newBuckets) {
     console.log(`End of session ${this.state.sessionId}`);
-    //TODO: Update buckets
-    //persist state
-    //start new session?
+    //TODO: persist state with newBuckets
+    //start a new session
+    this.setState(prevState => {
+     return this.getNewSession({
+       buckets: newBuckets,
+       nextSystemIdx: prevState.nextSystemIdx,
+       sessionId: prevState.sessionId,
+     });
+    });
   }
-
-  /*
-  componentDidMount() {
-  }
-  */
 
   render() {
     return(
