@@ -409,7 +409,7 @@ class GameSession extends Component {
   render() {
     return (
       <Practice
-        numbers={this.state.sessionBuckets[this.state.bucketId]}
+        numbers={this.state.sessionBuckets[this.state.bucketId]} //TODO: practice only 5 numbers at a row
         mode={this.state.practiceMode}
         showPeg={0 === this.state.bucketId}
         interval={2000}
@@ -440,7 +440,10 @@ class Level2 extends Component {
         buckets: [
           [], //0th bucket
           [], //1st bucket
-          [] //2nd bucket
+          [], //2nd bucket
+          [], //3rd bucket
+          [], //4th bucket
+          [], //retired bucket
         ],
         sessionId: 0, // one before very first session
         nextSystemIdx: 0, // start major system index
