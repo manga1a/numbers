@@ -319,12 +319,14 @@ class GameSession extends Component {
   static propTypes = {
     buckets: PropTypes.array.isRequired,
     sessionId: PropTypes.number.isRequired,
+    onComplete: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props);
     this.onBucketComplete = this.onBucketComplete.bind(this);
     this.setModeRecall = this.setModeRecall.bind(this);
+    this.getNextBucketId = this.getNextBucketId.bind(this);
     // deep copy buckets
     const clonedBuckets = props.buckets.map(bucket => {
       return [].concat(bucket);
@@ -345,7 +347,7 @@ class GameSession extends Component {
     this.setState((prevState, props) => {
       const currBucket = prevState.bucketId;
       const nextBucket = currBucket + 1;
-      let nextSessionBuckets = prevState.sessionBuckets.map((numbers, idx) => {
+      let newBuckets = prevState.sessionBuckets.map((numbers, idx) => {
         if(idx === currBucket) {
           return []; // current bucket is emptied
         } else if(idx === nextBucket) {
@@ -356,16 +358,39 @@ class GameSession extends Component {
       });
 
       //learn all fail numbers from bucket 0
-      nextSessionBuckets[0] = nextSessionBuckets[0].concat(fail);
+      newBuckets[0] = newBuckets[0].concat(fail);
 
-      //TODO: check end of session
+      const newBucket = (nextBucket < 2) ? nextBucket :
+        this.getNextBucketId(nextBucket,
+          props.sessionId,
+          props.buckets.length - 1 // last bucket is retired
+        );
 
+      if(newBucket < 0) { // end of session
+        props.onComplete(newBuckets)
+        return {};
+      }
+
+      console.log('new bucket: ', newBucket);
       return {
-        bucketId: nextBucket,
-        sessionBuckets: nextSessionBuckets,
+        bucketId: newBucket,
+        sessionBuckets: newBuckets,
         practiceMode: PracticeMode.Memorize
       };
     });
+  }
+
+  getNextBucketId(currentId, sessionId, bucketCount) {
+    const primes = [2, 3, 5, 7];
+    let current = currentId;
+    while(current < bucketCount) {
+      if(sessionId % primes[current - 2] === 0) {
+        return current;
+      }
+      current++;
+    }
+
+    return -1;
   }
 
   render() {
@@ -388,6 +413,7 @@ class Level2 extends Component {
 
   constructor(props) {
     super(props);
+    this.onSessionComplete = this.onSessionComplete.bind(this);
     this.state = {
       buckets: [
         ['04', '03', '02', '01', '00'], //0
@@ -398,12 +424,17 @@ class Level2 extends Component {
     };
   }
 
+  onSessionComplete(newBuckets) {
+    console.log(`End of session ${this.state.sessionId}`);
+  }
+
   render() {
     return(
       <div className="ui container">
         <GameSession
           buckets={this.state.buckets}
           sessionId={this.state.sessionId}
+          onComplete={this.onSessionComplete}
         />
         <h4 className="ui center aligned header">Session # {this.state.sessionId}</h4>
       </div>
