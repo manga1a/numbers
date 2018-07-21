@@ -356,7 +356,6 @@ class GameSession extends Component {
   }
 
   onBucketComplete(pass, fail) {
-    //console.log('id: ', this.state.bucketId, 'pass: ', pass, ', fail: ', fail);
     this.setState((prevState, props) => {
       const currBucket = prevState.bucketId;
       const nextBucket = currBucket + 1;
@@ -371,9 +370,11 @@ class GameSession extends Component {
         }
       });
 
+      //learn all fail numbers from bucket 0
       nextSessionBuckets[0] = nextSessionBuckets[0].concat(fail);
 
-      //TODO: reset mode of practice
+      //TODO: check end of session
+
       return {
         bucketId: nextBucket,
         sessionBuckets: nextSessionBuckets,
