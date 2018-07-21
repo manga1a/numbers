@@ -264,29 +264,35 @@ const PracticeMode = { Memorize: 0, Recall: 1};
 class Practice extends Component {
   static propTypes = {
     numbers: PropTypes.array.isRequired,
-    onComplete: PropTypes.func.isRequired,
+    mode: PropTypes.number.isRequired,
     showPeg: PropTypes.bool.isRequired,
-    interval: PropTypes.number.isRequired
+    interval: PropTypes.number.isRequired,
+    onModeChange: PropTypes.func.isRequired,
+    onComplete: PropTypes.func.isRequired,
   }
 
+  /*
   constructor(props){
     super(props);
-    this.state = {mode: PracticeMode.Memorize}
-    this.goToRecall = this.goToRecall.bind(this);
+    //this.state = {mode: PracticeMode.Memorize}
+    //this.goToRecall = this.goToRecall.bind(this);
   }
+  */
 
+  /*
   goToRecall() {
     this.setState({mode: PracticeMode.Recall});
   }
+  */
 
   render () {
-    if(this.state.mode === PracticeMode.Memorize) {
+    if(this.props.mode === PracticeMode.Memorize) {
       return (
         <Memorize
           numbers={this.props.numbers}
           interval={this.props.interval}
           showPeg={this.props.showPeg}
-          onComplete={this.goToRecall}
+          onComplete={this.props.onModeChange}
         />
       );
     } else {
@@ -305,6 +311,7 @@ class Practice extends Component {
 * Keep buckets 0 - 5, and r (i.e. retired)
 * Keep track of session number starting from 1
 * A session consists of...
+  * Keep a seperate set of temporary buckets for each session???
   * Pick items from bucket-0 and study (i.e. show peg)
     * add pass to bucket-1, fail to bucket-0
   * Pick items from bucket-1 and practice
@@ -320,30 +327,70 @@ class Practice extends Component {
 * Maintain this at the start of a session?
 */
 //------------------------------------------------------
-// Game component
-class Game extends Component {
+// GameSession component
+class GameSession extends Component {
 
   static propTypes = {
     buckets: PropTypes.array.isRequired,
     sessionId: PropTypes.number.isRequired,
-    onBucketComplete: PropTypes.func.isRequired
   }
 
   constructor(props) {
     super(props);
-    this.state = { bucketId: 0 }
+    this.onBucketComplete = this.onBucketComplete.bind(this);
+    this.setModeRecall = this.setModeRecall.bind(this);
+    // deep copy buckets
+    const clonedBuckets = props.buckets.map(bucket => {
+      return [].concat(bucket);
+    });
+    // set initial state
+    this.state = {
+      bucketId: 0,
+      sessionBuckets: clonedBuckets,
+      practiceMode: PracticeMode.Memorize
+    }
+  }
+
+  setModeRecall() {
+    this.setState({practiceMode: PracticeMode.Recall});
+  }
+
+  onBucketComplete(pass, fail) {
+    //console.log('id: ', this.state.bucketId, 'pass: ', pass, ', fail: ', fail);
+    this.setState((prevState, props) => {
+      const currBucket = prevState.bucketId;
+      const nextBucket = currBucket + 1;
+      let nextSessionBuckets = prevState.sessionBuckets.map((numbers, idx) => {
+        // current bucket should be empty
+        if(idx === currBucket) {
+          return [];
+        } else if(idx === nextBucket) {
+          return numbers.concat(pass);
+        } else {
+          return numbers;
+        }
+      });
+
+      nextSessionBuckets[0] = nextSessionBuckets[0].concat(fail);
+
+      //TODO: reset mode of practice
+      return {
+        bucketId: nextBucket,
+        sessionBuckets: nextSessionBuckets,
+        practiceMode: PracticeMode.Memorize
+      };
+    });
   }
 
   render() {
     return (
       <Practice
-        numbers={this.props.buckets[this.state.bucketId]}
+        numbers={this.state.sessionBuckets[this.state.bucketId]}
+        mode={this.state.practiceMode}
         showPeg={0 === this.state.bucketId}
         interval={2000}
-        onComplete={(pass, fail) => {
-          this.props.onBucketComplete(
-            this.state.bucketId, pass, fail);
-        }}
+        onModeChange={this.setModeRecall}
+        onComplete={this.onBucketComplete}
       />
     );
   }
@@ -355,7 +402,6 @@ class Level2 extends Component {
 
   constructor(props) {
     super(props);
-    this.onBucketComplete = this.onBucketComplete.bind(this);
     this.state = {
       buckets: [
         ['04', '03', '02', '01', '00'], //0
@@ -367,17 +413,12 @@ class Level2 extends Component {
     };
   }
 
-  onBucketComplete(id, pass, fail) {
-    console.log('id: ', id, ", passed: ", pass, ", failed: ", fail);
-  }
-
   render() {
     return(
       <div className="ui container">
-        <Game
+        <GameSession
           buckets={this.state.buckets}
           sessionId={this.state.sessionId}
-          onBucketComplete={this.onBucketComplete}
         />
       </div>
     );
