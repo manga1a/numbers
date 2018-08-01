@@ -312,6 +312,8 @@ class Practice extends Component {
 * Always try to keep 5? items in bucket-0
 * Maintain this at the start of a session?
 */
+
+const MaxRecallSeq = 5;
 //------------------------------------------------------
 // GameSession component
 class GameSession extends Component {
@@ -338,9 +340,14 @@ class GameSession extends Component {
       return [].concat(bucket);
     });
 
+    //Limit the size of playing bucket
+    let pBucket = clonedBuckets[0].slice(0, MaxRecallSeq);
+    clonedBuckets[0] = clonedBuckets[0].slice(MaxRecallSeq);
+
     return {
       bucketId: 0,
       sessionBuckets: clonedBuckets,
+      playingBucket: pBucket,
       practiceMode: PracticeMode.Memorize,
     };
   }
@@ -354,9 +361,10 @@ class GameSession extends Component {
       const currBucketId = prevState.bucketId;
       const nextBucketId = currBucketId + 1;
       let newBuckets = prevState.sessionBuckets.map((numbers, idx) => {
+        /*
         if(idx === currBucketId) {
           return []; // current bucket is emptied
-        } else if(idx === nextBucketId) {
+        } else*/ if(idx === nextBucketId) {
           return Helpers.shuffleArray(numbers.concat(pass));
         } else {
           return numbers;
@@ -366,21 +374,32 @@ class GameSession extends Component {
       //learn all fail numbers from bucket 0
       newBuckets[0] = newBuckets[0].concat(fail);
 
-      const newBucket = (nextBucketId < 2) ? nextBucketId :
-        this.getNextBucketId(nextBucketId,
-          props.sessionId,
-          props.buckets.length - 1 // last bucket is retired
-        );
+      let newBucketId;
+      if(0 < newBuckets[currBucketId].length) {//TODO: if current bucket is not 0, or more than minimum seq
+        newBucketId = currBucketId;
+      } else {
+        newBucketId = (nextBucketId < 2) ? nextBucketId :
+          this.getNextBucketId(nextBucketId,
+            props.sessionId,
+            props.buckets.length - 1 // last bucket is retired
+          );
+      }
 
-      if(newBucket < 0) { // end of session
+      if(newBucketId < 0) { // end of session
         props.onComplete(newBuckets)
         return {};
       }
 
-      console.log('new bucket: ', newBucket);
+      //Refill playing bucket
+      let pBucket = newBuckets[newBucketId].slice(0, MaxRecallSeq);
+      newBuckets[newBucketId] = newBuckets[newBucketId].slice(MaxRecallSeq);
+
+      console.log('new bucket: ', newBucketId);
+
       return {
-        bucketId: newBucket,
+        bucketId: newBucketId,
         sessionBuckets: newBuckets,
+        playingBucket: pBucket,
         practiceMode: PracticeMode.Memorize
       };
     });
@@ -410,7 +429,7 @@ class GameSession extends Component {
     return (
       <div>
         <Practice
-          numbers={this.state.sessionBuckets[this.state.bucketId]} //TODO: practice only 5 numbers at a row
+          numbers={this.state.playingBucket}//TODO: practice only 5 numbers at a row
           mode={this.state.practiceMode}
           showPeg={0 === this.state.bucketId}
           interval={2000}
