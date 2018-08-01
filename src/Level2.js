@@ -313,7 +313,8 @@ class Practice extends Component {
 * Maintain this at the start of a session?
 */
 
-const MaxRecallSeq = 5;
+const MaxRecallSeq = 4;
+const MinRecallSeq = 2;
 //------------------------------------------------------
 // GameSession component
 class GameSession extends Component {
@@ -375,7 +376,8 @@ class GameSession extends Component {
       newBuckets[0] = newBuckets[0].concat(fail);
 
       let newBucketId;
-      if(0 < newBuckets[currBucketId].length) {//TODO: if current bucket is not 0, or more than minimum seq
+      if(currBucketId !== 0 && MinRecallSeq < newBuckets[currBucketId].length) {
+        //console.log(`new bucket ${currBucketId}: ${newBuckets[currBucketId].length}`);
         newBucketId = currBucketId;
       } else {
         newBucketId = (nextBucketId < 2) ? nextBucketId :
