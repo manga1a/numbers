@@ -351,12 +351,12 @@ class GameSession extends Component {
 
   onBucketComplete(pass, fail) {
     this.setState((prevState, props) => {
-      const currBucket = prevState.bucketId;
-      const nextBucket = currBucket + 1;
+      const currBucketId = prevState.bucketId;
+      const nextBucketId = currBucketId + 1;
       let newBuckets = prevState.sessionBuckets.map((numbers, idx) => {
-        if(idx === currBucket) {
+        if(idx === currBucketId) {
           return []; // current bucket is emptied
-        } else if(idx === nextBucket) {
+        } else if(idx === nextBucketId) {
           return Helpers.shuffleArray(numbers.concat(pass));
         } else {
           return numbers;
@@ -366,8 +366,8 @@ class GameSession extends Component {
       //learn all fail numbers from bucket 0
       newBuckets[0] = newBuckets[0].concat(fail);
 
-      const newBucket = (nextBucket < 2) ? nextBucket :
-        this.getNextBucketId(nextBucket,
+      const newBucket = (nextBucketId < 2) ? nextBucketId :
+        this.getNextBucketId(nextBucketId,
           props.sessionId,
           props.buckets.length - 1 // last bucket is retired
         );
@@ -408,14 +408,19 @@ class GameSession extends Component {
 
   render() {
     return (
-      <Practice
-        numbers={this.state.sessionBuckets[this.state.bucketId]} //TODO: practice only 5 numbers at a row
-        mode={this.state.practiceMode}
-        showPeg={0 === this.state.bucketId}
-        interval={2000}
-        onModeChange={this.setModeRecall}
-        onComplete={this.onBucketComplete}
-      />
+      <div>
+        <Practice
+          numbers={this.state.sessionBuckets[this.state.bucketId]} //TODO: practice only 5 numbers at a row
+          mode={this.state.practiceMode}
+          showPeg={0 === this.state.bucketId}
+          interval={2000}
+          onModeChange={this.setModeRecall}
+          onComplete={this.onBucketComplete}
+        />
+        <h4 className="ui center aligned header">
+          Session {this.props.sessionId} | Bucket {this.state.bucketId}
+        </h4>
+      </div>
     );
   }
 }
@@ -500,7 +505,6 @@ class Level2 extends Component {
           sessionId={this.state.sessionId}
           onComplete={this.onSessionComplete}
         />
-        <h4 className="ui center aligned header">Session # {this.state.sessionId}</h4>
       </div>
     );
   }
