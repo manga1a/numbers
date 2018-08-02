@@ -431,7 +431,7 @@ class GameSession extends Component {
     return (
       <div>
         <Practice
-          numbers={this.state.playingBucket}//TODO: practice only 5 numbers at a row
+          numbers={this.state.playingBucket}
           mode={this.state.practiceMode}
           showPeg={0 === this.state.bucketId}
           interval={2000}
@@ -507,7 +507,8 @@ class Level2 extends Component {
 
   onSessionComplete(newBuckets) {
     console.log(`End of session ${this.state.sessionId}`);
-    //TODO: persist state with newBuckets
+    Helpers.saveState(StateKey, this.state);
+    debugger; //pause
     //start a new session
     this.setState(prevState => {
      return this.getNewSession({
