@@ -449,7 +449,7 @@ class GameSession extends Component {
 //------------------------------------------------------
 // Root component
 const StateKey = 'Level2';
-const MinBucket0Length = 5;
+const MinBucket0Length = 5; //TODO: use MaxRecallSeq??
 
 class Level2 extends Component {
 
