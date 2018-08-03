@@ -314,7 +314,7 @@ class Practice extends Component {
 */
 
 const MaxRecallSeq = 4;
-const MinRecallSeq = 2;
+const MinRecallSeq = 3;
 //------------------------------------------------------
 // GameSession component
 class GameSession extends Component {
@@ -362,13 +362,10 @@ class GameSession extends Component {
       const currBucketId = prevState.bucketId;
       const nextBucketId = currBucketId + 1;
       let newBuckets = prevState.sessionBuckets.map((numbers, idx) => {
-        /*
-        if(idx === currBucketId) {
-          return []; // current bucket is emptied
-        } else*/ if(idx === nextBucketId) {
+        if(idx === nextBucketId) {
           return Helpers.shuffleArray(numbers.concat(pass));
         } else {
-          return numbers;
+          return [].concat(numbers); //deep copy
         }
       });
 
@@ -376,7 +373,7 @@ class GameSession extends Component {
       newBuckets[0] = newBuckets[0].concat(fail);
 
       let newBucketId;
-      if(currBucketId !== 0 && MinRecallSeq < newBuckets[currBucketId].length) {
+      if(currBucketId !== 0 && MinRecallSeq <= newBuckets[currBucketId].length) {
         //console.log(`new bucket ${currBucketId}: ${newBuckets[currBucketId].length}`);
         newBucketId = currBucketId;
       } else {
@@ -408,7 +405,7 @@ class GameSession extends Component {
   }
 
   getNextBucketId(currentId, sessionId, bucketCount) {
-    const primes = [2, 3, 5]; // Supports upto 5 buckets, except retired
+    const primes = [2, 3, 5, 7, 11]; // Supports upto 7 buckets, except retired
     let current = currentId;
     while(current < bucketCount) {
       if(sessionId % primes[current - 2] === 0) {
@@ -449,7 +446,7 @@ class GameSession extends Component {
 //------------------------------------------------------
 // Root component
 const StateKey = 'Level2';
-const MinBucket0Length = 5; //TODO: use MaxRecallSeq??
+const MinBucket0Length = MaxRecallSeq;
 
 class Level2 extends Component {
 
@@ -469,6 +466,8 @@ class Level2 extends Component {
           [], //2nd bucket
           [], //3rd bucket
           [], //4th bucket
+          [], //5th bucket
+          [], //6th bucket
           [], //retired bucket
         ],
         sessionId: 0, // one before very first session
@@ -478,23 +477,22 @@ class Level2 extends Component {
   }
 
   getNewSession(prevState) {
-    let bucket0 = prevState.buckets[0];
+    let bucket0 = [].concat(prevState.buckets[0]); // deep copy
     const len = bucket0.length;
     let idx = prevState.nextSystemIdx;
     // make sure bucket0 has minimum length
     if(len < MinBucket0Length) {
       const end = idx + (MinBucket0Length - len);
       var newNumbers = Major.Numbers.slice(idx, end);
-      bucket0 = newNumbers.concat(prevState.buckets[0]);
+      bucket0 = bucket0.concat(newNumbers);
       idx = end; //TODO: handle end of numbers
     }
-    Helpers.shuffleArray(bucket0);
     // update buckets with new bucket0
     const newBuckets = prevState.buckets.map((bucket, i) => {
       if(0 === i) {
-        return bucket0;
+        return Helpers.shuffleArray(bucket0);
       } else {
-        return bucket;
+        return Helpers.shuffleArray([].concat(bucket)); // deep copy
       }
     });
 
