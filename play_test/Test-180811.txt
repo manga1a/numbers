@@ -1,0 +1,3 @@
+Level2 | Player: Mangala
+
+* Finish all items in bucket-0 if there are more than 4 items, before moving to next?

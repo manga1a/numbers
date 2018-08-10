@@ -373,7 +373,8 @@ class GameSession extends Component {
       newBuckets[0] = newBuckets[0].concat(fail);
 
       let newBucketId;
-      if(currBucketId !== 0 && MinRecallSeq <= newBuckets[currBucketId].length) {
+      //if(currBucketId !== 0 && MinRecallSeq <= newBuckets[currBucketId].length) {
+      if(MinRecallSeq <= newBuckets[currBucketId].length) { // play all in bucket-0 before moving to next
         //console.log(`new bucket ${currBucketId}: ${newBuckets[currBucketId].length}`);
         newBucketId = currBucketId;
       } else {
