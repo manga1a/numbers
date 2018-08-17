@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Helpers from '../../utils/Helpers'
+import Helpers from '../../utils/Helpers';
+import NumPad from '../common/NumPad';
 
 const consonantToNumber = [
   {c: 's', n: 0},
@@ -217,16 +218,21 @@ class Play extends Component {
     this.setState({sec: this.state.sec + 1});
   }
 
-  onBtnClick(e) {
-    const num = parseInt(e.target.id, 10);
-    const consonants = this.props.consonants;
-    if(num === consonants[this.state.idx].n) {
-      const newIdx = this.state.idx + 1;
-      if(newIdx === consonants.length) {
-        //End of challenge
-        this.props.onComplete(this.state.sec);
-      } else {
-        this.setState({idx: newIdx, cnt: newIdx});
+  onBtnClick(id) {
+    //if help? this.props.onBack. else follows
+    const num = parseInt(id, 10);
+    if (isNaN(num)) {
+      this.props.onBack();
+    } else {
+      const consonants = this.props.consonants;
+      if(num === consonants[this.state.idx].n) {
+        const newIdx = this.state.idx + 1;
+        if(newIdx === consonants.length) {
+          //End of challenge
+          this.props.onComplete(this.state.sec);
+        } else {
+          this.setState({idx: newIdx, cnt: newIdx});
+        }
       }
     }
   }
@@ -258,36 +264,7 @@ class Play extends Component {
         <div className="row">
           <div className="six wide column"/>
           <div className="four wide column">
-            <div className="3 fluid ui buttons">
-              <div className="ui button" onClick={this.onBtnClick}
-                id={7}>7</div>
-              <div className="ui button" onClick={this.onBtnClick}
-                id={8}>8</div>
-              <div className="ui button" onClick={this.onBtnClick}
-                id={9}>9</div>
-            </div>
-            <div className="3 fluid ui buttons">
-              <div className="ui button" onClick={this.onBtnClick}
-                id={4}>4</div>
-              <div className="ui button" onClick={this.onBtnClick}
-                id={5}>5</div>
-              <div className="ui button" onClick={this.onBtnClick}
-                id={6}>6</div>
-            </div>
-            <div className="3 fluid ui buttons">
-              <div className="ui button" onClick={this.onBtnClick}
-                id={1}>1</div>
-              <div className="ui button" onClick={this.onBtnClick}
-                id={2}>2</div>
-              <div className="ui button" onClick={this.onBtnClick}
-                id={3}>3</div>
-            </div>
-            <div className="2 fluid ui buttons">
-              <div className="ui button" onClick={this.props.onBack}>
-                Help</div>
-              <div className="ui button" onClick={this.onBtnClick}
-                id={0}>0</div>
-            </div>
+            <NumPad onButton={this.onBtnClick} showHelp={true} />
           </div>
           <div className="six wide column"/>
         </div>
@@ -337,7 +314,7 @@ class Level1 extends Component {
     this.goToHelp = this.goToHelp.bind(this);
     this.goToPlay = this.goToPlay.bind(this);
     this.goToEnding = this.goToEnding.bind(this);
-    this.state = {mode: INTRO, bestTime: 0};
+    this.state = {mode: PLAY, bestTime: 0};
   }
 
   goToIntro() {

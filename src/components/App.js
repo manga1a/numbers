@@ -7,7 +7,7 @@ import NumPad from './common/NumPad';
 class App extends Component {
   render(){
     return (
-      <NumPad onButton={(id) => {console.log(id);}}/>
+      <LevelOne />
     );
   }
 }

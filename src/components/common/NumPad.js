@@ -31,7 +31,7 @@ class NumPad extends Component {
 
     return (
       <div>
-        <table>
+        <table align="center">
           <tbody>
             <tr>
               <td><div className="ui button" onClick={this.onClick} id='7'>7</div></td>
