@@ -1,69 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Major from '../../utils/Major'
-import Helpers from '../../utils/Helpers'
-
-/*
-https://en.wikipedia.org/wiki/Leitner_system
-
-Keep numbers 00 to 99 with pegs shuffled in bucket 0.
-Show n (e.g. 5) items from bucket 0, each for a duration of t (e.g. 3) seconds.
-Recall those numbers in sequence. Time limit???
-Add successful items to bucket 1, while keeping failing items at bucket 0.
-Continue until bucket 0 is empty.
-*/
-
-//------------------------------------------------------
-// Button grid
-class ButtonGrid extends Component {
-  constructor(props){
-    super(props);
-    this.onBtnClick = this.onBtnClick.bind(this);
-  }
-
-  onBtnClick(e) {
-    //const num = parseInt(e.target.id, 10);
-    //console.log('clicked: ' + e.target.id)
-    this.props.onClick(e.target.id);
-  }
-
-  render() {
-    return (
-      <div className="row">
-        <div className="six wide column"/>
-        <div className="four wide column">
-          <div className="3 fluid ui buttons">
-            <div className="ui button" onClick={this.onBtnClick}
-              id={7}>7</div>
-            <div className="ui button" onClick={this.onBtnClick}
-              id={8}>8</div>
-            <div className="ui button" onClick={this.onBtnClick}
-              id={9}>9</div>
-          </div>
-          <div className="3 fluid ui buttons">
-            <div className="ui button" onClick={this.onBtnClick}
-              id={4}>4</div>
-            <div className="ui button" onClick={this.onBtnClick}
-              id={5}>5</div>
-            <div className="ui button" onClick={this.onBtnClick}
-              id={6}>6</div>
-          </div>
-          <div className="3 fluid ui buttons">
-            <div className="ui button" onClick={this.onBtnClick}
-              id={1}>1</div>
-            <div className="ui button" onClick={this.onBtnClick}
-              id={2}>2</div>
-            <div className="ui button" onClick={this.onBtnClick}
-              id={3}>3</div>
-          </div>
-          <div className="ui button" onClick={this.onBtnClick}
-            id={0}>0</div>
-        </div>
-        <div className="six wide column"/>
-      </div>
-    );
-  }
-}
+import Major from '../../utils/Major';
+import Helpers from '../../utils/Helpers';
+import NumPad from '../common/NumPad';
 
 //------------------------------------------------------
 // A flash card
@@ -188,7 +127,8 @@ class Recall extends Component {
     };
   }
 
-  onSelect(n) {
+  onSelect(id) {
+    const n = parseInt(id, 10);
     const idx = this.state.focus;
     const expected = this.props.numbers[idx];
     const actual = this.state.values[idx] + n;
@@ -250,7 +190,13 @@ class Recall extends Component {
           </div>
         </div>
         <div className="ui grid">
-          <ButtonGrid onClick={this.onSelect}/>
+          <div className="row">
+            <div className="six wide column"/>
+            <div className="four wide column">
+              <NumPad onButton={this.onSelect} />
+            </div>
+            <div className="six wide column"/>
+          </div>
         </div>
       </div>
     );

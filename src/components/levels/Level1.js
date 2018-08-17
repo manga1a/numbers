@@ -314,7 +314,7 @@ class Level1 extends Component {
     this.goToHelp = this.goToHelp.bind(this);
     this.goToPlay = this.goToPlay.bind(this);
     this.goToEnding = this.goToEnding.bind(this);
-    this.state = {mode: PLAY, bestTime: 0};
+    this.state = {mode: INTRO, bestTime: 0};
   }
 
   goToIntro() {
