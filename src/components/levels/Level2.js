@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Major from './Major'
-import Helpers from './Helpers'
+import Major from '../../utils/Major'
+import Helpers from '../../utils/Helpers'
 
 /*
 https://en.wikipedia.org/wiki/Leitner_system
