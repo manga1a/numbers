@@ -25,6 +25,39 @@ function Card(props) {
 }
 
 //------------------------------------------------------
+const CHALLENGE = 0;
+const RECALL = 1;
+
+class PlaySession extends Component {
+  static propTypes = {
+    numbers: PropTypes.array.isRequired,
+    onComplete: PropTypes.func.isRequired,
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      mode: CHALLENGE,
+    }
+  }
+
+  render() {
+    let child;
+    if(this.state.mode === CHALLENGE) {
+      child = (<Card number={this.props.numbers.join('')} />);
+    } else {
+
+    }
+
+    return (
+      <div>
+        {child}
+      </div>
+    );
+  }
+}
+
+//------------------------------------------------------
 // Root component
 class Level3 extends Component {
 
@@ -40,11 +73,14 @@ class Level3 extends Component {
   render() {
     return(
       <div className="ui container">
-        {/*<Card number='12342' />*/}
-        <NumberInput
+        <PlaySession
           numbers={['3', '2', '3', '9']}
           onComplete={this.foo}
         />
+
+        {/*<Card number={['0', '3', '0'].join('')} />
+        <NumberInput
+        />*/}
       </div>
     );
   }
