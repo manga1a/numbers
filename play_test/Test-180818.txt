@@ -1,0 +1,4 @@
+Level2 | Player: Mangala
+
+* Do not play empty buckets. I.e. When bucket-0 is empty in the last few sessions.
+** No need to fix this in prototype
