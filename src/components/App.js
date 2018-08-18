@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 
 import LevelOne from './levels/Level1';
 import LevelTwo from './levels/Level2';
-import NumPad from './common/NumPad';
+import LevelThree from './levels/Level3';
 
 class App extends Component {
   render(){
     return (
-      <LevelTwo />
+      <LevelThree />
     );
   }
 }
