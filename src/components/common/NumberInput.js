@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import NumPad from '../common/NumPad';
+import Consonant from '../../utils/Consonant';
 
 //------------------------------------------------------
 const DEFAULT = 0;
@@ -93,10 +94,24 @@ class NumberInput extends Component {
           key={idx}/>);
     });
 
+    const idx = this.state.focus - 1;
+    let consonant;
+    if(0 <= idx && idx < this.props.numbers.length) {
+      if(this.props.numbers[idx] === this.state.values[idx]) {
+        consonant = '.';
+      } else {
+        consonant = Consonant.ForNumber[this.props.numbers[idx]];
+      }
+    } else {
+      consonant = '.';
+    }
+
     return (
       <div>
         <div className="ui two column centered grid">
           <div className="column center aligned">
+            <p>{consonant}</p>
+            <div/>
             {inputCells}
           </div>
         </div>

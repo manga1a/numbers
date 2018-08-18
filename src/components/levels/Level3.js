@@ -9,9 +9,9 @@ import NumberInput from '../common/NumberInput';
 *
 * Display a sequence of n digit numbers (3 <= n)
 *   Display a number in the sequence for t seconds (5? <= t)
-*   Recall number
-*     Recall ends when the digit count of actual number and expected are same, or...
-*     Timer ends
+*   Recall the number
+*     Recall ends when the digit count of actual number and expected are same
+*     There is no timer for recall
 *   Repeat till end of sequence
 * When all the sequence is recalled correctly...
 *   increment n by 1
