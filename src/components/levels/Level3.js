@@ -5,8 +5,22 @@ import Helpers from '../../utils/Helpers';
 import NumberInput from '../common/NumberInput';
 
 /*
-* Go beyond major system. E.g. Basket = 9071
+* Do not bind to the Major system. E.g. Basket = 9071
+*
+* Display a sequence of n digit numbers (3 <= n)
+*   Display a number in the sequence for t seconds (5? <= t)
+*   Recall number
+*     Recall ends when the digit count of actual number and expected are same, or...
+*     Timer ends
+*   Repeat till end of sequence
+* When all the sequence is recalled correctly...
+*   increment n by 1
+* Else...
+*   increment t by 1
+*
 * When a number is incorrectly typed in recall, display it's consonant
+* Soon as the last digit is typed in a correct recall, move to next item in sequence
+*   even when there is remaining time
 */
 
 //------------------------------------------------------
