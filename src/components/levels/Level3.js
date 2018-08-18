@@ -25,17 +25,31 @@ import NumberInput from '../common/NumberInput';
 
 //------------------------------------------------------
 // A flash card
-function Card(props) {
-  return (
-    <div className="ui centered card">
-      <div
-        className="ui center aligned header"
-        style={{fontSize: 40 + 'px'}}
-      >
-        {props.number}
+class Card extends Component {
+  static propTypes = {
+    number: PropTypes.string.isRequired,
+    timer: PropTypes.number.isRequired,
+    onTimer: PropTypes.func.isRequired,
+  };
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.props.onTimer();
+    }, this.props.timer);
+  }
+
+  render() {
+    return (
+      <div className="ui centered card">
+        <div
+          className="ui center aligned header"
+          style={{fontSize: 40 + 'px'}}
+        >
+          {this.props.number}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 //------------------------------------------------------
@@ -50,17 +64,37 @@ class PlaySession extends Component {
 
   constructor(props) {
     super(props);
+    this.switchToRecall = this.switchToRecall.bind(this);
+
     this.state = {
       mode: CHALLENGE,
     }
   }
 
+  switchToRecall() {
+    this.setState(() => {
+      return {
+        mode: RECALL,
+      }
+    });
+  }
+
   render() {
     let child;
     if(this.state.mode === CHALLENGE) {
-      child = (<Card number={this.props.numbers.join('')} />);
+      child = (
+        <Card
+          number={this.props.numbers.join('')}
+          timer={3000}
+          onTimer={this.switchToRecall}
+        />);
     } else {
-
+      child = (
+        <NumberInput
+          numbers={this.props.numbers}
+          onComplete={this.props.onComplete}
+        />
+      );
     }
 
     return (
@@ -91,10 +125,6 @@ class Level3 extends Component {
           numbers={['3', '2', '3', '9']}
           onComplete={this.foo}
         />
-
-        {/*<Card number={['0', '3', '0'].join('')} />
-        <NumberInput
-        />*/}
       </div>
     );
   }
