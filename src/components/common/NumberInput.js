@@ -69,11 +69,12 @@ class NumberInput extends Component {
       focus: newFocus,
       values: newValues,
     });
+  }
 
+  componentDidUpdate() {
     // check for completion
-    if(newFocus === this.props.numbers.length) {
-      // Will this execute after the previous setState???
-      setTimeout(this.onComplete, 500);
+    if(this.state.focus === this.props.numbers.length) {
+      setTimeout(this.onComplete, 1000);
     }
   }
 

@@ -51,12 +51,34 @@ const Helpers = (function helpers(){
     }
   }
 
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+  }
+
+  function areArraysEqual(left, right) {
+    if(left.length !== right.length) {
+      return false;
+    }
+
+    let i = 0;
+    while(i < left.length) {
+      if(left[i] !== right[i]) {
+        return false;
+      }
+      i++;
+    }
+
+    return true;
+  }
+
   // API
   return {
     shuffleArray : shuffleArray,
     createShuffledArray: createShuffledArray,
     saveState: saveState,
     loadState: loadState,
+    getRandomInt: getRandomInt,
+    areArraysEqual: areArraysEqual,
   };
 })();
 

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Major from '../../utils/Major';
 import Helpers from '../../utils/Helpers';
 import NumberInput from '../common/NumberInput';
 
@@ -38,6 +37,9 @@ class Card extends Component {
     }, this.props.timer);
   }
 
+  componentWillUnmount() {
+  }
+
   render() {
     return (
       <div className="ui centered card">
@@ -59,34 +61,19 @@ const RECALL = 1;
 class PlaySession extends Component {
   static propTypes = {
     numbers: PropTypes.array.isRequired,
+    onTimerEnd: PropTypes.func.isRequired,
     onComplete: PropTypes.func.isRequired,
+    mode: PropTypes.number.isRequired,
   };
-
-  constructor(props) {
-    super(props);
-    this.switchToRecall = this.switchToRecall.bind(this);
-
-    this.state = {
-      mode: CHALLENGE,
-    }
-  }
-
-  switchToRecall() {
-    this.setState(() => {
-      return {
-        mode: RECALL,
-      }
-    });
-  }
 
   render() {
     let child;
-    if(this.state.mode === CHALLENGE) {
+    if(this.props.mode === CHALLENGE) {
       child = (
         <Card
           number={this.props.numbers.join('')}
           timer={3000}
-          onTimer={this.switchToRecall}
+          onTimer={this.props.onTimerEnd}
         />);
     } else {
       child = (
@@ -106,6 +93,79 @@ class PlaySession extends Component {
 }
 
 //------------------------------------------------------
+class GameSession extends Component {
+  static propTypes = {
+    count: PropTypes.number.isRequired,
+    onComplete: PropTypes.func.isRequired,
+  };
+
+  constructor(props) {
+    super(props);
+    this.onPlayEnd = this.onPlayEnd.bind(this);
+    this.getNumArray = this.getNumArray.bind(this);
+    this.goToRecall = this.goToRecall.bind(this);
+
+    this.state = {
+      numbers: this.getNumArray(),
+      wins: 0,
+      mode: CHALLENGE,
+    };
+  }
+
+  getNumArray() {
+    let n = [];
+    for(let i = 0; i < this.props.count; ++i) {
+       n.push(Helpers.getRandomInt(10).toString());
+    }
+    return n;
+  }
+
+  goToRecall() {
+    this.setState(() => {
+      return {
+        mode: RECALL
+      };
+    });
+  }
+
+  onPlayEnd(numEntered) {
+    let func;
+    if(Helpers.areArraysEqual(this.state.numbers, numEntered)) {
+      func = (prevState) => {
+        return {
+          numbers: this.getNumArray(),
+          wins: prevState.wins + 1,
+          mode: CHALLENGE,
+        };
+      };
+    } else {
+      func = () => {
+        return {
+          numbers: this.getNumArray(),
+          mode: CHALLENGE,
+        };
+      };
+    }
+
+    this.setState(func);
+  }
+
+  render () {
+    return (
+      <div className="ui container">
+        <PlaySession
+          numbers={this.state.numbers}
+          onTimerEnd={this.goToRecall}
+          onComplete={this.onPlayEnd}
+          mode={this.state.mode}
+        />
+      </div>
+    );
+  }
+
+}
+
+//------------------------------------------------------
 // Root component
 class Level3 extends Component {
 
@@ -114,18 +174,16 @@ class Level3 extends Component {
     this.foo = this.foo.bind(this);
   }
 
-  foo(nums) {
-    console.log('vals: ', nums)
+  foo() {
+    console.log('*** End of Session ***');
   }
 
   render() {
     return(
-      <div className="ui container">
-        <PlaySession
-          numbers={['3', '2', '3', '9']}
-          onComplete={this.foo}
-        />
-      </div>
+      <GameSession
+        count={3}
+        onComplete={this.foo}
+      />
     );
   }
 }
