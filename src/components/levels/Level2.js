@@ -83,10 +83,11 @@ class Memorize extends Component {
   }
 
   componentDidMount() {
-    setTimeout(() => this.onTrigger(), this.props.interval);
+    this.timerId = setTimeout(() => this.onTrigger(), this.props.interval);
   }
 
   componentWillUnmount() {
+    clearTimeout(this.timerId);
   }
 
   onTrigger() {
@@ -94,7 +95,7 @@ class Memorize extends Component {
     const interval = this.props.interval;
     if(newIdx < this.props.numbers.length){
       this.setState({idx: newIdx});
-      setTimeout(() => this.onTrigger(), interval);
+      this.timerId = setTimeout(() => this.onTrigger(), interval);
     } else {
       this.props.onComplete();
     }
@@ -127,6 +128,10 @@ class Recall extends Component {
     };
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.timerId);
+  }
+
   onSelect(id) {
     const n = parseInt(id, 10);
     const idx = this.state.focus;
@@ -151,7 +156,7 @@ class Recall extends Component {
       // check for completion
       if(newFocus === this.props.numbers.length) {
         // Will this execute after the previous setState???
-        setTimeout(this.onComplete, 500);
+        this.timerId = setTimeout(this.onComplete, 500);
       }
     }
   }

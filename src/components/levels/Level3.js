@@ -32,12 +32,13 @@ class Card extends Component {
   };
 
   componentDidMount() {
-    setTimeout(() => {
+    this.timerId = setTimeout(() => {
       this.props.onTimer();
     }, this.props.timer);
   }
 
   componentWillUnmount() {
+    clearTimeout(this.timerId);
   }
 
   render() {
