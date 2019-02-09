@@ -1,8 +1,0 @@
-Level2 | Player: Mangala
-
-* Can play without memorizing pegs???
-
-* Load bucket-3 elements into bucket-2 when bucket-2 is playing.
-Otherwise when failed set is replayed on bucket-2 previous elements are not loaded.
-
-* Save bucket-2 playing more frequently

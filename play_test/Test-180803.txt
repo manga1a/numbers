@@ -1,6 +1,0 @@
-Level2 | Player: Mangala
-
-* Bucket 1 does not seem shuffled enough sometimes
-* Add more buckets (maybe 2 more) to recall old numbers
-//* Persist new state instead of past state
-* Use same count for bucket-0 as MaxRecallSeq??
